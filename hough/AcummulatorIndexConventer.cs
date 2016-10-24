@@ -6,38 +6,39 @@ namespace Hough
 {
     public class AcummulatorIndexConventer
     {
-        private readonly int _imageWidth;
-        private readonly int _imageHeigth;
+        private readonly double _diagonal;
         private readonly int _rhoIntervalCount;
         private readonly double _thetaDelta;
         private readonly double _rhoDelta;
 
-        public AcummulatorIndexConventer(int imageWidth, int imageHeigth, int rhoIntervalCount, double thetaDelta)
+        public AcummulatorIndexConventer(int imageWidth, int imageHeigth, int rhoIntervalCount, int thetaIntervalCount)
         {
-            _imageWidth = imageWidth;
-            _imageHeigth = imageHeigth;
             _rhoIntervalCount = rhoIntervalCount;
-            _thetaDelta = thetaDelta;
 
-            _rhoDelta =  Math.PI / _rhoIntervalCount;
+            _diagonal = Math.Sqrt(
+                imageHeigth*imageHeigth +
+                imageWidth*imageWidth);
+
+
+            _thetaDelta = 1.5*_diagonal/thetaIntervalCount;
+            _rhoDelta = Math.PI/_rhoIntervalCount;
         }
 
         public List<int> GetAccumulatorDimensions()
         {
             return new List<int>()
             {
-                _rhoIntervalCount +1,
-                //todo theta dim
+                _rhoIntervalCount + 1,
+                (int) Math.Round(_diagonal*1.5/_thetaDelta)
             };
         }
 
         public List<int> GetAccumulatorIndex(PolarPointF pointF)
         {
-            //var 
             return new List<int>()
             {
-                (int) Math.Round(pointF.Rho /_rhoDelta)
-                //todo theta index
+                (int) Math.Round(pointF.Rho/_rhoDelta),
+                (int) ((pointF.Theta + 0.5*_diagonal)/_thetaDelta) // auto math flor
             };
         }
 
@@ -46,7 +47,7 @@ namespace Hough
             return new PolarPointF()
             {
                 Rho = indices[0]*_rhoDelta,
-                Theta = 0 //todo fixme please please please very please, i want be implemented
+                Theta = (-0.5*_diagonal) + (indices[1]*_thetaDelta) + (0.5*_thetaDelta)
             };
         }
     }
