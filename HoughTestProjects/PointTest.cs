@@ -22,7 +22,7 @@ namespace HoughTestProjects
             Tuple<Point, Point> pair = new Tuple<Point, Point>(new Point(0, 2), new Point(1, 3));
             var line = PointUtils.GetPolarLineFromCartesianPoints(pair);
 
-            Assert.AreEqual(line.Rho,Math.PI/2,0.0001);
+            Assert.AreEqual(line.Rho,Math.PI/4,0.0001);
             Assert.AreEqual(line.Theta,-Math.Sqrt(2),0.0001);
         }
     }
