@@ -53,6 +53,9 @@ namespace Hough
             }
         }
 
-        public RelayCommand OpenFileCommand { get { return _openFileCommand; } } 
+        public RelayCommand OpenFileCommand
+        {
+            get { return _openFileCommand; }
+        } 
     }
 }
