@@ -5,16 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hough"
         xmlns:vm="clr-namespace:Hough"
+        xmlns:converter="clr-namespace:Hough"
+        
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-
+<Window.Resources>
+    <converter:BinaryImageConverter x:Key="binary-image-converter"></converter:BinaryImageConverter>
+</Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="93*"/>
             <ColumnDefinition Width="424*"/>
         </Grid.ColumnDefinitions>
         <Button Content="Open" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="75" Grid.Column="0"/>
-        
-        <Image Source="{Binding ImagePath}" HorizontalAlignment="Left" Margin="0,0,0,0" Stretch="Uniform " Grid.Column="1"/>
+
+        <Image Source="{Binding ImageBytes, Converter={StaticResource binary-image-converter}}" HorizontalAlignment="Left" Margin="0,0,0,0" Stretch="Uniform " Grid.Column="1" Grid.RowSpan="2"/>
     </Grid>
 </Window>

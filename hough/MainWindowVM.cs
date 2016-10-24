@@ -5,7 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+using System.Drawing;
+using System.Windows.Controls;
 
 namespace Hough
 {
@@ -14,12 +15,22 @@ namespace Hough
         private IShellService _shellService;
 
         private string _imagePath;
+        private byte[] imageBytes;
         private RelayCommand _openFileCommand;
 
         public MainWindowVM(IShellService shellService)
         {
             _shellService = shellService;
-            _openFileCommand = new RelayCommand(o => { ImagePath = _shellService.OpenFileDialog(); });
+            _openFileCommand = new RelayCommand(o =>
+            {
+                ImagePath = _shellService.OpenFileDialog();
+
+                using (var fs = new FileStream(ImagePath, FileMode.Open))
+                using (var br = new BinaryReader(fs))
+                {
+                    ImageBytes = br.ReadBytes((int)fs.Length); 
+                }
+            });
         }
 
         public string ImagePath
@@ -31,6 +42,8 @@ namespace Hough
                 RaisePropertyChangedEvent(nameof(ImagePath));
             }
         }
+
+        public byte[] ImageBytes { get { return imageBytes; } set { imageBytes = value; RaisePropertyChangedEvent(nameof(ImageBytes)); } }
 
         public RelayCommand OpenFileCommand { get { return _openFileCommand; } } 
     }

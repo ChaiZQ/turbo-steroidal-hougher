@@ -17,9 +17,7 @@ namespace Hough
         {
             var ofd = new Microsoft.Win32.OpenFileDialog() { Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png" };
 
-            if (ofd.ShowDialog() == false) return null;
-
-            return ofd.FileName;
+            return ofd.ShowDialog() == false ? null : ofd.FileName;
         }
     }
 }
