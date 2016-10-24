@@ -4,9 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hough"
+        xmlns:vm="clr-namespace:Hough"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="93*"/>
+            <ColumnDefinition Width="424*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="{Binding ImagePath}" HorizontalAlignment="Left" Margin="0,0,0,0" Stretch="Uniform " Grid.Column="1"/>
+        <Button Content="Open" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>
