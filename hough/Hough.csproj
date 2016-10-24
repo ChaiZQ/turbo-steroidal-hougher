@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowVM.cs" />
+    <Compile Include="PointUtils.cs" />
     <Compile Include="PolarPointF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
