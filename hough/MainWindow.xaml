@@ -6,12 +6,11 @@
         xmlns:local="clr-namespace:Hough"
         xmlns:vm="clr-namespace:Hough"
         xmlns:converter="clr-namespace:Hough"
-        
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-<Window.Resources>
-    <converter:BinaryImageConverter x:Key="binary-image-converter"></converter:BinaryImageConverter>
-</Window.Resources>
+    <Window.Resources>
+        <converter:BinaryImageConverter x:Key="binary-image-converter"></converter:BinaryImageConverter>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
