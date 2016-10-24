@@ -33,13 +33,15 @@ namespace Hough
             int h = bitmap.Height;
 
             IntPtr hbmp = bitmap.GetHbitmap();
-            /*
-            var source = Imaging.CreateBitmapSourceFromHBitmap(
+
+            Source = Imaging.CreateBitmapSourceFromHBitmap(
                 hbmp,
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-                */
+
+            var arr = BitmapSourceToArray(Source);
+
             List<Point> blackPoints = new List<Point>();
 
             //byte[] pPixelBuffer = new byte[w*h];
@@ -61,14 +63,17 @@ namespace Hough
                 }
             }*/
 
+            Debug.WriteLine($"{arr.Length}");
+
             for (int i = 0; i < h; i++)
             {
                 for (int j = 0; j < w; j++)
                 {
-                    var px = bitmap.GetPixel(j, i);
-                    if (px.B == 0 && px.G == 0 && px.R == 0)
+                    var px = arr[i*w + j];
+                    Debug.WriteLine($"{i * w + j} : {px}");
+                    if (px == 0)
                     {
-                        blackPoints.Add(new Point(i, j));
+                        blackPoints.Add(new Point(j, i));
                     }
                 }
             }
@@ -78,6 +83,30 @@ namespace Hough
             return blackPoints;
         }
 
+        private byte[] BitmapSourceToArray(BitmapSource bitmapSource)
+        {
+            int stride = (int)bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
+            byte[] pixels = new byte[(int)bitmapSource.PixelHeight * stride];
+
+            
+
+
+            bitmapSource.CopyPixels(pixels, stride, 0);
+
+
+            var result = new byte[bitmapSource.PixelHeight * bitmapSource.PixelWidth];
+            int j = 0;
+            for (int i = 0; i < pixels.Length; i += (bitmapSource.Format.BitsPerPixel / 8))
+            {
+                if (pixels[i + 1] == 0 && pixels[i + 2] == 0)
+                    result[j] = 0;
+                else result[j] = 1;
+
+                j++;
+            }
+
+            return result;
+        }
 
         public MainWindowVM(IShellService shellService)
         {
@@ -116,6 +145,9 @@ namespace Hough
                 RaisePropertyChangedEvent(nameof(ImagePixels));
             }
         }
+
+        public BitmapSource Source { get; set; }
+
 
         public List<Point> BlackPixels { get; set; }
 
