@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using Point = System.Drawing.Point;
+using Point = System.Windows.Point;
 
 namespace Hough
 {

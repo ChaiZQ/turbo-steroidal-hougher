@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using Point = System.Drawing.Point;
+using Point = System.Windows.Point;
 
 namespace Hough
 { 
@@ -39,6 +39,7 @@ namespace Hough
                 Source = new BitmapImage(new Uri(ImagePath));
                 ImageProcessor processor = new ImageProcessor(Source);
                 BlackPixels = processor.GetBlackPixels();
+                GetLines();
             });
         }
 
@@ -87,9 +88,30 @@ namespace Hough
         private void GetLines()
         {
             var pairs = BlackPixels.GetCombinationPairs().ToArray();
-            
-            //todo zrobic z par linie
-            //
+
+            AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4, 4);
+            //AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4, 4);
+
+            var dim = converter.GetAccumulatorDimensions();
+            byte[,] hough = new byte[dim[0], dim[1]];
+
+
+            foreach (var pair in pairs)
+            {
+                var polar = PointUtils.GetPolarLineFromCartesianPoints(pair);
+
+                var ro = converter.GetAccumulatorIndex(polar)[0];
+                var theta = converter.GetAccumulatorIndex(polar)[1];
+                hough[ro, theta] = 1;
+            }
+
+            for (int r = 0; r < dim[0]; r++)
+            {
+                for (int t = 0; t < dim[1]; t++)
+                {
+                    Debug.WriteLine(hough[r,t]);
+                }
+            }
         }
     }
 }
