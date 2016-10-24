@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AcummulatorIndexConventer.cs" />
     <Compile Include="BinaryImageConverter.cs" />
     <Compile Include="ImageProcessor.cs" />
     <Compile Include="IShellService.cs" />
