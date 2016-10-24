@@ -23,7 +23,7 @@ namespace Hough
         {
             get { return _rho; }
             set {
-                double m = Math.PI/2;
+                double m = Math.PI;
                 _rho = (value % m + m) % m; }
         }
 

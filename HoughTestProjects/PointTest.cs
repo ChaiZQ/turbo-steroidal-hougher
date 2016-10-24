@@ -10,12 +10,11 @@ namespace HoughTestProjects
     public class PointTest
     {
         [TestMethod]
-        public void SuccesPath()
+        public void PolarPointRhoModuloTest()
         {
-            var pointF = new PolarPointF(-1,0);
+            var pointF = new PolarPointF(-1, 0);
 
-            Assert.AreEqual(pointF.Rho,-1+Math.PI/2, 0.00001);
-
+            Assert.AreEqual(pointF.Rho, -1 + Math.PI, 0.00001);
         }
 
     }
