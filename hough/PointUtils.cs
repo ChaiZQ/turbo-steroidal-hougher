@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Documents;
 using Point = System.Windows.Point;
 
 namespace Hough
