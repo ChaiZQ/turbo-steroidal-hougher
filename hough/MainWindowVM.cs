@@ -16,15 +16,10 @@ namespace Hough
         private string _imagePath;
         private RelayCommand _openFileCommand;
 
-        public MainWindowVM()
+        public MainWindowVM(IShellService shellService)
         {
-            _shellService = new ShellService();
-
-            _openFileCommand = new RelayCommand(
-                (object o) =>
-                {
-                    ImagePath = _shellService.OpenFileDialog();
-                });
+            _shellService = shellService;
+            _openFileCommand = new RelayCommand(o => { ImagePath = _shellService.OpenFileDialog(); });
         }
 
         public string ImagePath

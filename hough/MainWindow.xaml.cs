@@ -22,10 +22,9 @@ namespace Hough
     {
         public MainWindow()
         {
-
             InitializeComponent();
 
-            DataContext = new MainWindowVM();
+            DataContext = new MainWindowVM(new ShellService());
         }
     }
 }
