@@ -13,15 +13,16 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="93*"/>
-            <ColumnDefinition Width="424*"/>
+            <ColumnDefinition Width="97*"/>
+            <ColumnDefinition Width="420*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Open" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="75" Grid.Column="0"/>
+        <Button Content="Open" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="10,10,0,10" Width="75" Grid.Column="0"/>
 
-        <Image Source="{Binding ImageBytes, Converter={StaticResource binary-image-converter}}" HorizontalAlignment="Left" Margin="0,0,0,0" Stretch="Uniform " Grid.Column="1" Grid.RowSpan="2"/>
+        <Image Source="{Binding ImageBytes, Converter={StaticResource binary-image-converter}}" HorizontalAlignment="Left" Margin="0,0,0,0" Stretch="Uniform " Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Text="{Binding ImagePath}"  Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10" Height="15"/>
     </Grid>
 </Window>

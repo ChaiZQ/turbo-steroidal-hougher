@@ -15,7 +15,7 @@ namespace Hough
         private IShellService _shellService;
 
         private string _imagePath;
-        private byte[] imageBytes;
+        private byte[] _imageBytes;
         private RelayCommand _openFileCommand;
 
         public MainWindowVM(IShellService shellService)
@@ -43,7 +43,15 @@ namespace Hough
             }
         }
 
-        public byte[] ImageBytes { get { return imageBytes; } set { imageBytes = value; RaisePropertyChangedEvent(nameof(ImageBytes)); } }
+        public byte[] ImageBytes
+        {
+            get { return _imageBytes; }
+            set
+            {
+                _imageBytes = value;
+                RaisePropertyChangedEvent(nameof(ImageBytes));
+            }
+        }
 
         public RelayCommand OpenFileCommand { get { return _openFileCommand; } } 
     }
