@@ -25,6 +25,9 @@ namespace Hough
             {
                 ImagePath = _shellService.OpenFileDialog();
 
+                if (string.IsNullOrEmpty(ImagePath))
+                    return;
+
                 using (var fs = new FileStream(ImagePath, FileMode.Open))
                 using (var br = new BinaryReader(fs))
                 {
@@ -53,6 +56,9 @@ namespace Hough
             }
         }
 
-        public RelayCommand OpenFileCommand { get { return _openFileCommand; } } 
+        public RelayCommand OpenFileCommand
+        {
+            get { return _openFileCommand; }
+        } 
     }
 }
