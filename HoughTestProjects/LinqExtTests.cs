@@ -12,7 +12,7 @@ namespace HoughTestProjects
         [TestMethod]
         public void SuccesPath()
         {
-            var test = new[] { new Point(0, 0), new Point(1, 2), new Point(3, 3) };
+            var test = new[] {new Point(0, 0), new Point(1, 2), new Point(3, 3)};
             var predicatedPains = new[]
             {
                 new Tuple<Point, Point>(test[0], test[1]),
@@ -25,8 +25,9 @@ namespace HoughTestProjects
             Assert.AreEqual(pairs.Count(), 3);
 
             CollectionAssert.AreEquivalent(pairs.ToArray(), predicatedPains);
-
         }
+
+
         [TestMethod]
         public void EmptyList()
         {
@@ -37,5 +38,4 @@ namespace HoughTestProjects
             throw new NotImplementedException("bo ja wiem co powinno się dziać ");
         }
     }
-
 }
