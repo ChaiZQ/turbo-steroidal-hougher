@@ -40,5 +40,14 @@ namespace Hough
                 //todo theta index
             };
         }
+
+        public PolarPointF GetLineFromIndex(List<int> indices)
+        {
+            return new PolarPointF()
+            {
+                Rho = indices[0]*_rhoDelta,
+                Theta = 0 //todo fixme please please please very please, i want be implemented
+            };
+        }
     }
 }
