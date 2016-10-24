@@ -23,6 +23,7 @@ namespace Hough
         private string _imagePath;
         private byte[] _imageBytes;
         private RelayCommand _openFileCommand;
+        private BitmapSource _bitmapSource;
 
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
@@ -88,16 +89,13 @@ namespace Hough
             int stride = (int)bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
             byte[] pixels = new byte[(int)bitmapSource.PixelHeight * stride];
 
-            
-
-
             bitmapSource.CopyPixels(pixels, stride, 0);
-
 
             var result = new byte[bitmapSource.PixelHeight * bitmapSource.PixelWidth];
             int j = 0;
             for (int i = 0; i < pixels.Length; i += (bitmapSource.Format.BitsPerPixel / 8))
             {
+                // dwa srodkowe musza byc czarne xD 32bit obrazek
                 if (pixels[i + 1] == 0 && pixels[i + 2] == 0)
                     result[j] = 0;
                 else result[j] = 1;
@@ -146,7 +144,7 @@ namespace Hough
             }
         }
 
-        public BitmapSource Source { get; set; }
+        public BitmapSource Source { get { return _bitmapSource; } set { _bitmapSource = value; RaisePropertyChangedEvent(nameof(Source)); } }
 
 
         public List<Point> BlackPixels { get; set; }

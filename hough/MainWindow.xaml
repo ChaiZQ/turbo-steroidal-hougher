@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
         <Button Content="Open" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="10,10,0,10" Width="75" Grid.Column="0"/>
 
-        <Image Source="{Binding ImageBytes, Converter={StaticResource binary-image-converter}}"  
+        <Image Source="{Binding Source}"  
                RenderOptions.BitmapScalingMode="NearestNeighbor"
                RenderOptions.EdgeMode="Aliased" 
                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Stretch="None" Grid.Column="1" Grid.Row="1"/>
