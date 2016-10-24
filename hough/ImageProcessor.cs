@@ -18,9 +18,9 @@ namespace Hough
         private BitmapSource bitmapSource;
         private byte[] classifiedPixels;
 
-        public ImageProcessor(string path)
+        public ImageProcessor(BitmapSource bitmapSrc)
         {
-            bitmapSource = new BitmapImage(new Uri(path));
+            bitmapSource = bitmapSrc;
             classifiedPixels = BitmapSourceToClassifiedPixels();
         }
 

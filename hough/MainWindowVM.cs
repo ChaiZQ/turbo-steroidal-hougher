@@ -36,7 +36,8 @@ namespace Hough
                 if (string.IsNullOrEmpty(ImagePath))
                     return;
 
-                ImageProcessor processor = new ImageProcessor(ImagePath);
+                Source = new BitmapImage(new Uri(ImagePath));
+                ImageProcessor processor = new ImageProcessor(Source);
                 BlackPixels = processor.GetBlackPixels();
             });
         }
