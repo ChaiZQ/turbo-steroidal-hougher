@@ -4,29 +4,33 @@ namespace Hough
 {
     public class PolarPointF
     {
-        private float _rho;
+        private double _rho;
 
-        public PolarPointF(float rho, float theta)
+        public PolarPointF(double rho, double theta)
         {
             Rho = rho;
             Theta = theta;
         }
 
+        public PolarPointF()
+        {
+        }
+
         /// <summary>
         ///     value in radians from 0 to pi/2
         /// </summary>
-        public float Rho
+        public double Rho
         {
             get { return _rho; }
             set {
-                float m = (float) (Math.PI/2);
+                double m = Math.PI/2;
                 _rho = (value % m + m) % m; }
         }
 
         /// <summary>
         ///     accept positive and negative values
         /// </summary>
-        public float Theta { get; set; }
+        public double Theta { get; set; }
 
         protected bool Equals(PolarPointF other)
         {
