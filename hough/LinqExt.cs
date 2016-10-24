@@ -6,7 +6,7 @@ namespace Hough
 {
     public static class LinqExt
     {
-        public static IEnumerable<Tuple<T, T>> DifferentCombinations<T>(this IEnumerable<T> elements)
+        public static IEnumerable<Tuple<T, T>> GetCombinationPairs<T>(this IEnumerable<T> elements)
         {
             return elements.SelectMany((elem, i) => elements.Skip(i + 1).Select(elem2 => new Tuple<T, T>(elem, elem2)));
         }
