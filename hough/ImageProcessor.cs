@@ -35,11 +35,11 @@ namespace Hough
 
             List<Point> blackPoints = new List<Point>();
 
-            for (int i = 0; i < h; i++)
+            for (int i = 0; i < w; i++)
             {
-                for (int j = 0; j < w; j++)
+                for (int j = 0; j < h; j++)
                 {
-                    var px = classifiedPixels[i * w + j];
+                    var px = classifiedPixels[j * h + i];
 
                     if (px == 0)
                         blackPoints.Add(new Point(j, i));
