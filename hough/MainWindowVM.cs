@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using Point = System.Windows.Point;
 
 namespace Hough
-{ 
+{
     class MainWindowVM : ViewModel
     {
         private IShellService _shellService;
@@ -74,11 +74,7 @@ namespace Hough
             }
         }
 
-        public List<Point> BlackPixels
-        {
-            get;
-            set;
-        }
+        public List<Point> BlackPixels { get; set; }
 
         public RelayCommand OpenFileCommand
         {
@@ -87,31 +83,27 @@ namespace Hough
 
         private void GetLines()
         {
-            var pairs = BlackPixels.GetCombinationPairs().ToArray();
-
-            AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4, 4);
+            AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4,
+                6);
             //AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4, 4);
 
             var dim = converter.GetAccumulatorDimensions();
             byte[,] hough = new byte[dim[0], dim[1]];
 
-
-            foreach (var pair in pairs)
-            {
-                var polar = PointUtils.GetPolarLineFromCartesianPoints(pair);
-
-                var ro = converter.GetAccumulatorIndex(polar)[0];
-                var theta = converter.GetAccumulatorIndex(polar)[1];
-                hough[ro, theta] = 1;
-            }
-
-            for (int r = 0; r < dim[0]; r++)
-            {
-                for (int t = 0; t < dim[1]; t++)
+            var line = BlackPixels.GetCombinationPairs()
+                .Select(PointUtils.GetPolarLineFromCartesianPoints)
+                .Select(p =>
                 {
-                    Debug.WriteLine(hough[r,t]);
-                }
-            }
+                    var accumulatorIndex = converter.GetAccumulatorIndex(p);
+                    return new Tuple<int, int>(accumulatorIndex[0], accumulatorIndex[1]);
+                })
+                .GroupBy(p => p)
+                .OrderByDescending(group => group.Count())
+                .Select(g => converter.GetLineFromIndex(new List<int>() {g.Key.Item1, g.Key.Item2}))
+                .First();
+
+
+            Debug.WriteLine(line);
         }
     }
 }

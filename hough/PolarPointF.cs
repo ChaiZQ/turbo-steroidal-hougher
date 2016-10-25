@@ -22,9 +22,11 @@ namespace Hough
         public double Rho
         {
             get { return _rho; }
-            set {
+            set
+            {
                 double m = Math.PI;
-                _rho = (value % m + m) % m; }
+                _rho = (value%m + m)%m;
+            }
         }
 
         /// <summary>
@@ -39,7 +41,8 @@ namespace Hough
 
         public override string ToString()
         {
-            return $"Rho: {Rho}, Theta: {Theta}";
+            var degre = Rho*(180.0/Math.PI);
+            return $"Rho: {degre} deg, Theta: {Theta}";
         }
 
         public override bool Equals(object obj)
