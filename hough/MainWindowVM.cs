@@ -50,7 +50,7 @@ namespace Hough
             set
             {
                 _imagePath = value;
-                RaisePropertyChangedEvent(nameof(ImagePath));
+                RaisePropertyChangedEvent("ImagePath");
             }
         }
 
@@ -60,7 +60,7 @@ namespace Hough
             set
             {
                 _imageBytes = value;
-                RaisePropertyChangedEvent(nameof(ImagePixels));
+                RaisePropertyChangedEvent("ImagePixels");
             }
         }
 
@@ -70,7 +70,7 @@ namespace Hough
             set
             {
                 _bitmapSource = value;
-                RaisePropertyChangedEvent(nameof(Source));
+                RaisePropertyChangedEvent("Source");
             }
         }
 

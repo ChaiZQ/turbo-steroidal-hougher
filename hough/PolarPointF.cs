@@ -42,7 +42,7 @@ namespace Hough
         public override string ToString()
         {
             var degre = Rho*(180.0/Math.PI);
-            return $"Rho: {degre} deg, Theta: {Theta}";
+            return "Rho: " + degre + " deg, Theta: " +Theta;
         }
 
         public override bool Equals(object obj)

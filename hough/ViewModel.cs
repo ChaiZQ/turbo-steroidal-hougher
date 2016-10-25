@@ -13,7 +13,8 @@ namespace Hough
 
         protected void RaisePropertyChangedEvent(string property)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            if(PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
         }
     }
 }
