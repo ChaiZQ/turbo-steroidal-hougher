@@ -83,24 +83,16 @@ namespace Hough
 
         private void GetLines()
         {
-            AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4,
+            Accumulator accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4,
                 6);
-            //AcummulatorIndexConventer converter = new AcummulatorIndexConventer(Source.PixelWidth, Source.PixelHeight, 4, 4);
+            //Accumulator converter = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4, 4);
 
-            var dim = converter.GetAccumulatorDimensions();
-            byte[,] hough = new byte[dim[0], dim[1]];
-
-            var line = BlackPixels.GetCombinationPairs()
+            BlackPixels.GetCombinationPairs()
                 .Select(PointUtils.GetPolarLineFromCartesianPoints)
-                .Select(p =>
-                {
-                    var accumulatorIndex = converter.GetAccumulatorIndex(p);
-                    return new Tuple<int, int>(accumulatorIndex[0], accumulatorIndex[1]);
-                })
-                .GroupBy(p => p)
-                .OrderByDescending(group => group.Count())
-                .Select(g => converter.GetLineFromIndex(new List<int>() {g.Key.Item1, g.Key.Item2}))
-                .First();
+                .ToList()
+                .ForEach(accumulator.AddVote);
+
+            var line = accumulator.GetMaxValue();
 
 
             Debug.WriteLine(line);

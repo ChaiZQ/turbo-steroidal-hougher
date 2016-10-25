@@ -16,7 +16,7 @@ namespace HoughTestProjects
             var rhoIntervalCount = 4;
 
 
-            var conventer = new AcummulatorIndexConventer(4, 4, rhoIntervalCount, 4);
+            var conventer = new Accumulator(4, 4, rhoIntervalCount, 4);
 
             var dimensions = conventer.GetAccumulatorDimensions();
 
@@ -42,7 +42,7 @@ namespace HoughTestProjects
             var rhoIntervalCount = 4;
 
 
-            var conventer = new AcummulatorIndexConventer(4, 4, rhoIntervalCount, 4);
+            var conventer = new Accumulator(4, 4, rhoIntervalCount, 4);
             var pointF = new PolarPointF()
             {
                 Rho = 1.22173048, // 70 degre
@@ -73,7 +73,7 @@ namespace HoughTestProjects
         {
             //45 degre 
             var rhoIntervalCount = 4;
-            var conventer = new AcummulatorIndexConventer(4, 4, rhoIntervalCount, 4);
+            var conventer = new Accumulator(4, 4, rhoIntervalCount, 4);
 
             List<int> indices = new List<int>() {3, 2};
             //rho
