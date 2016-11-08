@@ -9,6 +9,7 @@ namespace Hough
     {
         private readonly double _diagonal;
         private readonly int _rhoIntervalCount;
+        private readonly int _thetaIntervalCount;
         private readonly double _thetaDelta;
         private readonly double _rhoDelta;
 
@@ -17,16 +18,16 @@ namespace Hough
         public Accumulator(int imageWidth, int imageHeigth, int rhoIntervalCount, int thetaIntervalCount)
         {
             _rhoIntervalCount = rhoIntervalCount;
+            _thetaIntervalCount = thetaIntervalCount;
 
-            _diagonal = Math.Sqrt(
-                imageHeigth*imageHeigth +
-                imageWidth*imageWidth);
+            _diagonal = Math.Sqrt(imageHeigth*imageHeigth + imageWidth*imageWidth);
 
+            _rhoDelta = 2 * Math.PI / _rhoIntervalCount;
+            _thetaDelta = _diagonal/thetaIntervalCount;
 
-            _thetaDelta = 1.5*_diagonal/thetaIntervalCount;
-            _rhoDelta = Math.PI/_rhoIntervalCount;
+            //diagonal 5.64
 
-
+            //1.41 2.82 4.23 5.64
             var dimensions = GetAccumulatorDimensions();
             _accumulator = new byte[dimensions[0], dimensions[1]];
         }
@@ -36,7 +37,7 @@ namespace Hough
             return new List<int>()
             {
                 _rhoIntervalCount + 1,
-                (int) Math.Round(_diagonal*1.5/_thetaDelta)
+                _thetaIntervalCount
             };
         }
 
@@ -44,8 +45,8 @@ namespace Hough
         {
             return new List<int>()
             {
-                (int) Math.Round(pointF.Rho/_rhoDelta),
-                (int) ((pointF.Theta + 0.5*_diagonal)/_thetaDelta) // auto math flor
+                (int) (pointF.Rho/_rhoDelta),
+                (int) (pointF.Theta/_thetaDelta) // auto math flor
             };
         }
 
@@ -54,7 +55,7 @@ namespace Hough
             return new PolarPointF()
             {
                 Rho = indices[0]*_rhoDelta,
-                Theta = (-0.5*_diagonal) + (indices[1]*_thetaDelta) + (0.5*_thetaDelta)
+                Theta = indices[1]*_thetaDelta
             };
         }
 

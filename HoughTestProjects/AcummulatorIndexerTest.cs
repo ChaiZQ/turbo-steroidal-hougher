@@ -51,8 +51,8 @@ namespace HoughTestProjects
 
             var indexes = conventer.GetAccumulatorIndex(pointF);
 
-            Assert.AreEqual(2, indexes[0]);
-            Assert.AreEqual(3, indexes[1]);
+            Assert.AreEqual(0, indexes[0]);
+            Assert.AreEqual(2, indexes[1]);
             //rho
             // [0] = 0     - 22,5
             // [1] = 22,5  - 67,5
@@ -65,6 +65,19 @@ namespace HoughTestProjects
             // [1] = -0.707 -  1,141
             // [2] =  1,141 -  3,535
             // [3] =  3.535 -  5.656
+
+
+            // rho
+            // [0] = 0     - 90
+            // [1] = 90  - 180
+            // [2] = 180  - 270
+            // [3] = 270 - 360
+
+            // theta
+            // [0] = 0      -       1.41
+            // [1] = 1.41   -       2.82
+            // [2] = 2.82   -       4.23
+            // [3] = 4.23   -       5.64
         }
 
 
