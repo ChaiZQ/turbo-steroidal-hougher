@@ -61,7 +61,9 @@ namespace Hough
         public void AddVote(PolarPointF pointF)
         {
             var index = GetAccumulatorIndex(pointF);
+            if (index[1] < 0) return; //todo 
             _accumulator[index[0], index[1]]++;
+           
         }
 
         public PolarPointF GetMaxValue()
