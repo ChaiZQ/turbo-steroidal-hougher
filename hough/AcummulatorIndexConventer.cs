@@ -66,6 +66,27 @@ namespace Hough
            
         }
 
+        public int MaxValue()
+        {
+            var max = 0;
+            var rhoIndex = 0;
+            var thetaIndex = 0;
+            for (int rho = 0; rho < _accumulator.GetLength(0); rho++)
+            {
+                for (int theta = 0; theta < _accumulator.GetLength(1); theta++)
+                {
+                    if (max < _accumulator[rho, theta])
+                    {
+                        max = _accumulator[rho, theta];
+                        rhoIndex = rho;
+                        thetaIndex = theta;
+                    }
+                }
+            }
+
+            return max;
+        }
+
         public PolarPointF GetMaxValue()
         {
             var max = 0;

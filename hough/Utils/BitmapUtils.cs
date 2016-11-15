@@ -14,11 +14,13 @@ namespace Hough.Utils
             var height = dimensions[1];
 
             Bitmap bitmap  = new Bitmap(dimensions[0],dimensions[1]);
+            var maxValue = accumulator.MaxValue();
 
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
                 {
-                    var color = Color.FromArgb(bytes[x,y], bytes[x, y], bytes[x, y]);
+                    int value = (int)(255 - ((double)bytes[x, y] * 255 / maxValue));
+                    var color = Color.FromArgb(value, value, value);
                     bitmap.SetPixel(x,y, color);
 //                    double color = bytes[x, y];
 //                    byte rgb = (byte)(color * 255);

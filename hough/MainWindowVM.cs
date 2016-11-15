@@ -95,7 +95,7 @@ namespace Hough
 
         private void GetLines()
         {
-            Accumulator accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 360,300);
+            Accumulator accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 8,16);
             //Accumulator converter = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4, 4);
 
             BlackPixels.GetCombinationPairs()
