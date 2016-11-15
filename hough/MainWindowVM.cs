@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using Hough.Utils;
 using Point = System.Windows.Point;
 
 namespace Hough
@@ -24,6 +25,7 @@ namespace Hough
         private byte[] _imageBytes;
         private RelayCommand _openFileCommand;
         private BitmapSource _bitmapSource;
+        private Bitmap _accumulatorImage;
 
 
         public MainWindowVM(IShellService shellService)
@@ -74,6 +76,16 @@ namespace Hough
             }
         }
 
+        public Bitmap AccumulatorImage
+        {
+            get { return _accumulatorImage; }
+            set
+            {
+                _accumulatorImage = value;
+                RaisePropertyChangedEvent("AccumulatorImage");
+            }
+        }
+
         public List<Point> BlackPixels { get; set; }
 
         public RelayCommand OpenFileCommand
@@ -83,7 +95,7 @@ namespace Hough
 
         private void GetLines()
         {
-            Accumulator accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 90,300);
+            Accumulator accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 360,300);
             //Accumulator converter = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4, 4);
 
             BlackPixels.GetCombinationPairs()
@@ -92,6 +104,9 @@ namespace Hough
                 .ForEach(accumulator.AddVote);
 
             var line = accumulator.GetMaxValue();
+
+            var bitmap =  accumulator.ConvertToBitmap();
+            AccumulatorImage = bitmap;
 
 
             Debug.WriteLine(line);

@@ -86,5 +86,10 @@ namespace Hough
 
             return GetLineFromIndex(new List<int>() {rhoIndex, thetaIndex});
         }
+
+        public byte[,] GetAccumulatorTable()
+        {
+            return (byte[,]) _accumulator.Clone();
+        }
     }
 }

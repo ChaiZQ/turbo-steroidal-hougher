@@ -63,6 +63,7 @@
     <Compile Include="ImageProcessor.cs" />
     <Compile Include="IShellService.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
