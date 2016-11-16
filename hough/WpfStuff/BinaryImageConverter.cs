@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Hough
+namespace Hough.WpfStuff
 {
     class BinaryImageConverter : IValueConverter
     {
@@ -19,7 +14,7 @@ namespace Hough
             {
                 var bitmap = value as Bitmap;
                 var bitmapData = bitmap.LockBits(
-                    new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                    new Rectangle(0, 0, bitmap.Width, bitmap.Height),
                     System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
                 var bitmapSource = BitmapSource.Create(

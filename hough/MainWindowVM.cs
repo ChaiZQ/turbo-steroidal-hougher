@@ -5,6 +5,7 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using Hough.Utils;
+using Hough.WpfStuff;
 using Point = System.Windows.Point;
 
 namespace Hough

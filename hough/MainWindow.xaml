@@ -6,11 +6,12 @@
         xmlns:local="clr-namespace:Hough"
         xmlns:vm="clr-namespace:Hough"
         xmlns:converter="clr-namespace:Hough"
+        xmlns:wpfStuff="clr-namespace:Hough.WpfStuff"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="800"
         Background="LightSteelBlue">
     <Window.Resources>
-        <converter:BinaryImageConverter x:Key="binary-image-converter"></converter:BinaryImageConverter>
+        <wpfStuff:BinaryImageConverter x:Key="binary-image-converter"></wpfStuff:BinaryImageConverter>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,3 +40,4 @@
         <TextBlock Text="{Binding ImagePath}"  Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,12,10,12" Height="16"/>
     </Grid>
 </Window>
+
