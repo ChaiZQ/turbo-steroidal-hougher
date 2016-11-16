@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using Hough;
+using Hough.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HoughTestProjects

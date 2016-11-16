@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Hough
+namespace Hough.Utils
 {
     public static class LinqExt
     {

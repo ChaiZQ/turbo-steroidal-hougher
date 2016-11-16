@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Hough;
+using Hough.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HoughTestProjects
