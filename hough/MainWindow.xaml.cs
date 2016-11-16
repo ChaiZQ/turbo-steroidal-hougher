@@ -26,5 +26,24 @@ namespace Hough
 
             DataContext = new MainWindowVM(new ShellService());
         }
+
+        private void AccumulatorImageControl_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            
+            var vm  = (DataContext as MainWindowVM);
+            if (vm == null) return;
+            var action = vm.MouseMoveOverAccumulator;
+            var bitmap = vm.AccumulatorImage;
+            Point position = e.GetPosition((IInputElement)sender);
+
+            var positionOnBitmap = new System.Drawing.Point()
+            {
+                X = (int) (position.X*bitmap.Width/AccumulatorImageControl.ActualWidth),
+                Y = (int) (position.Y*bitmap.Height/AccumulatorImageControl.ActualHeight),
+            };
+     
+
+            action?.Invoke(positionOnBitmap);
+        }
     }
 }

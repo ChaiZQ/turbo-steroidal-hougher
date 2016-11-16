@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using Hough.Utils;
 using Point = System.Windows.Point;
@@ -26,6 +18,7 @@ namespace Hough
         private RelayCommand _openFileCommand;
         private BitmapSource _bitmapSource;
         private Bitmap _accumulatorImage;
+        private Accumulator _accumulator;
 
 
         public MainWindowVM(IShellService shellService)
@@ -43,6 +36,11 @@ namespace Hough
                 BlackPixels = processor.GetBlackPixels();
                 GetLines();
             });
+
+            MouseMoveOverAccumulator = point =>
+            {
+                Debug.WriteLine($"{{X={point.X}, Y={point.Y}, Value={_accumulator[point.X,point.Y]}}}");
+            };
         }
 
 
@@ -93,19 +91,21 @@ namespace Hough
             get { return _openFileCommand; }
         }
 
+        public Action<System.Drawing.Point> MouseMoveOverAccumulator { get; }
+
         private void GetLines()
         {
-            Accumulator accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 8,16);
+           _accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 8,16);
             //Accumulator converter = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4, 4);
 
             BlackPixels.GetCombinationPairs()
                 .Select(PointUtils.GetPolarLineFromCartesianPoints)
                 .ToList()
-                .ForEach(accumulator.AddVote);
+                .ForEach(_accumulator.AddVote);
 
-            var line = accumulator.GetMaxValue();
+            var line = _accumulator.GetMaxValue();
 
-            var bitmap =  accumulator.ConvertToBitmap();
+            var bitmap = _accumulator.ConvertToBitmap();
             AccumulatorImage = bitmap;
 
 

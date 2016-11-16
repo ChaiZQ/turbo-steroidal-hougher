@@ -29,10 +29,13 @@
                RenderOptions.EdgeMode="Unspecified" 
                HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1" Grid.Row="1"/>
 
-        <Image Source="{Binding AccumulatorImage , Converter={StaticResource binary-image-converter}}"  
+        <Image 
+            Name="AccumulatorImageControl"
+            Source="{Binding AccumulatorImage , Converter={StaticResource binary-image-converter}}"  
                RenderOptions.BitmapScalingMode="NearestNeighbor"
                RenderOptions.EdgeMode="Unspecified" 
-               HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="2" Grid.Row="1"/>
+               HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="2" Grid.Row="1"
+               MouseMove="AccumulatorImageControl_OnMouseMove"/>
         <TextBlock Text="{Binding ImagePath}"  Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,12,10,12" Height="16"/>
     </Grid>
 </Window>
