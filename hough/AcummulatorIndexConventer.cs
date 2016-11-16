@@ -66,9 +66,9 @@ namespace Hough
            
         }
 
-        public int MaxValue()
+        public byte MaxValue()
         {
-            var max = 0;
+            byte max = 0;
             var rhoIndex = 0;
             var thetaIndex = 0;
             for (int rho = 0; rho < _accumulator.GetLength(0); rho++)

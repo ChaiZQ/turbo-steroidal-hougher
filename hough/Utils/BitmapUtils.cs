@@ -19,8 +19,16 @@ namespace Hough.Utils
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
                 {
-                    int value = (int)(255 - ((double)bytes[x, y] * 255 / maxValue));
-                    var color = Color.FromArgb(value, value, value);
+                    Color color;
+                    if (bytes[x, y] == maxValue)
+                    {
+                        color = Color.Red;
+                    }
+                    else
+                    {
+                        int value = (int) (255 - ((double) bytes[x, y]*255/maxValue));
+                        color = Color.FromArgb(value, value, value);
+                    }
                     bitmap.SetPixel(x,y, color);
 //                    double color = bytes[x, y];
 //                    byte rgb = (byte)(color * 255);
