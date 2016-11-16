@@ -9,8 +9,8 @@ namespace Hough
     {
         private readonly double _diagonal;
         private readonly int _rhoIntervalCount;
-        private readonly double _thetaDelta;
-        private readonly double _rhoDelta;
+        public readonly double ThetaDelta;
+        public readonly double RhoDelta;
 
         private readonly byte[,] _accumulator;
 
@@ -23,8 +23,8 @@ namespace Hough
                 imageWidth*imageWidth);
 
 
-            _thetaDelta = 1.5*_diagonal/thetaIntervalCount;
-            _rhoDelta = Math.PI/_rhoIntervalCount;
+            ThetaDelta = 1.5*_diagonal/thetaIntervalCount;
+            RhoDelta = Math.PI/_rhoIntervalCount;
 
 
             var dimensions = GetAccumulatorDimensions();
@@ -36,7 +36,7 @@ namespace Hough
             return new List<int>()
             {
                 _rhoIntervalCount + 1,
-                (int) Math.Round(_diagonal*1.5/_thetaDelta)
+                (int) Math.Round(_diagonal*1.5/ThetaDelta)
             };
         }
 
@@ -44,8 +44,8 @@ namespace Hough
         {
             return new List<int>()
             {
-                (int) Math.Round(pointF.Rho/_rhoDelta),
-                (int) ((pointF.Theta + 0.5*_diagonal)/_thetaDelta) // auto math flor
+                (int) Math.Round(pointF.Rho/RhoDelta),
+                (int) ((pointF.Theta + 0.5*_diagonal)/ThetaDelta) // auto math flor
             };
         }
 
@@ -53,8 +53,8 @@ namespace Hough
         {
             return new PolarPointF()
             {
-                Rho = indices[0]*_rhoDelta,
-                Theta = (-0.5*_diagonal) + (indices[1]*_thetaDelta) + (0.5*_thetaDelta)
+                Rho = indices[0]*RhoDelta,
+                Theta = (-0.5*_diagonal) + (indices[1]*ThetaDelta) + (0.5*ThetaDelta)
             };
         }
 

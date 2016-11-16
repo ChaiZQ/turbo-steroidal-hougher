@@ -40,7 +40,19 @@ namespace Hough
 
             MouseMoveOverAccumulator = point =>
             {
-                Debug.WriteLine($"{{X={point.X}, Y={point.Y}, Value={_accumulator[point.X,point.Y]}}}");
+                Debug.WriteLine($"{{X={point.X}, Y={point.Y}, Value={_accumulator[point.X, point.Y]}}}");
+                var line = _accumulator.GetLineFromIndex(new List<int>() {point.X, point.Y});
+
+                var minRho = line.Rho - _accumulator.RhoDelta/2;
+                var maxRho = line.Rho + _accumulator.RhoDelta/2;
+
+                minRho = minRho*(180.0/Math.PI);
+                maxRho = maxRho*(180.0/Math.PI);
+
+                var minTheta = line.Theta - _accumulator.ThetaDelta/2;
+                var maxTheta = line.Theta + _accumulator.ThetaDelta/2;
+                Debug.WriteLine($"Rho: {{{minRho} - {maxRho}}}");
+                Debug.WriteLine($"Theta: {{{minTheta} - {maxTheta}}}");
             };
         }
 
