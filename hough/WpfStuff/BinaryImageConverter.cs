@@ -17,8 +17,10 @@ namespace Hough.WpfStuff
                     new Rectangle(0, 0, bitmap.Width, bitmap.Height),
                     System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
+                var pixelFormat = ConvertPixelFormat(bitmap.PixelFormat);
+
                 var bitmapSource = BitmapSource.Create(
-                    bitmapData.Width, bitmapData.Height, 96, 96, PixelFormats.Bgra32, null,
+                    bitmapData.Width, bitmapData.Height, 96, 96, pixelFormat, null,
                     bitmapData.Scan0, bitmapData.Stride*bitmapData.Height, bitmapData.Stride);
 
                 bitmap.UnlockBits(bitmapData);
@@ -31,6 +33,22 @@ namespace Hough.WpfStuff
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new Exception("The method or operation is not implemented.");
+        }
+
+        private static System.Windows.Media.PixelFormat ConvertPixelFormat(System.Drawing.Imaging.PixelFormat sourceFormat)
+        {
+            switch (sourceFormat)
+            {
+                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+                    return PixelFormats.Bgr24;
+
+                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+                    return PixelFormats.Bgra32;
+
+                case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+                    return PixelFormats.Bgr32;
+            }
+            return new System.Windows.Media.PixelFormat();
         }
     }
 }

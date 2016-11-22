@@ -25,12 +25,10 @@
         </Grid.ColumnDefinitions>
         <Button Content="Open" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="10,10,0,10" Width="75" Grid.Column="0"/>
 
-        <Image Source="{Binding Source}"  
+        <Image Source="{Binding Source,Converter={StaticResource binary-image-converter}}"  
                RenderOptions.BitmapScalingMode="NearestNeighbor"
                RenderOptions.EdgeMode="Unspecified" 
-               HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1" Grid.Row="1">
-
-        </Image>
+               HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1" Grid.Row="1" />
 
         <Image 
             Name="AccumulatorImageControl"
