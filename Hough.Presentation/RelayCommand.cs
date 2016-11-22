@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Hough.WpfStuff
+namespace Hough.Presentation
 {
     public class RelayCommand : ICommand
     {

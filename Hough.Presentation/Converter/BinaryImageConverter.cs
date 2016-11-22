@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Hough.WpfStuff
+namespace Hough.Presentation.Converter
 {
     class BinaryImageConverter : IValueConverter
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Hough.WpfStuff
+namespace Hough.Presentation.ViewModel
 {
     class ViewModel : INotifyPropertyChanged
     {

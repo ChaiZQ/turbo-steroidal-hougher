@@ -1,4 +1,4 @@
-﻿namespace Hough.WpfStuff
+﻿namespace Hough.Presentation.Service
 {
     public interface IShellService
     {
