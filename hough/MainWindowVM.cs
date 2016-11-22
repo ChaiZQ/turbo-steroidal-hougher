@@ -9,6 +9,8 @@ using Hough.WpfStuff;
 using Point = System.Windows.Point;
 using System.Windows.Media;
 using System.Windows;
+using Color = System.Drawing.Color;
+using Pen = System.Drawing.Pen;
 
 namespace Hough
 {
@@ -19,7 +21,7 @@ namespace Hough
         private string _imagePath;
         private byte[] _imageBytes;
         private RelayCommand _openFileCommand;
-        private BitmapSource _bitmapSource;
+        private Bitmap _bitmap;
         private Bitmap _accumulatorImage;
         private Accumulator _accumulator;
 
@@ -34,9 +36,8 @@ namespace Hough
                 if (string.IsNullOrEmpty(ImagePath))
                     return;
 
-                Source = new BitmapImage(new Uri(ImagePath));
-                ImageProcessor processor = new ImageProcessor(Source);
-                BlackPixels = processor.GetBlackPixels();
+                Source = new Bitmap(ImagePath);
+                BlackPixels = ImageProcessor.GetBlackPixels(Source);
                 GetLines();
             });
 
@@ -56,29 +57,24 @@ namespace Hough
                 Debug.WriteLine("Rho: {{" + minRho + " - " + maxRho + "}}");
                 Debug.WriteLine("Theta: {{" + minTheta + " - " + maxTheta + "}}");
 
-                var drawingVisual = new DrawingVisual();
+                Bitmap clone = (Bitmap) Image.FromFile(ImagePath);
 
-                using (var drawingContext = drawingVisual.RenderOpen())
+                using (var graphics = Graphics.FromImage(clone))
                 {
-                    var overlayImage = new BitmapImage(new Uri(ImagePath));
-                    drawingContext.DrawImage(overlayImage, new Rect(0, 0, overlayImage.Width, overlayImage.Height));
-
                     var a = Math.Cos(line.Rho);
                     var b = Math.Sin(line.Rho);
-                    var x0 = a * (line.Theta);
-                    var y0 = b * (line.Theta);
-                    var x1 = x0 + 1000 * (-b);
-                    var y1 = y0 + 1000 * (a);
-                    var x2 = x0 - 1000 * (-b);
-                    var y2 = y0 - 1000 * (a);
+                    var x0 = a*(line.Theta);
+                    var y0 = b*(line.Theta);
+                    int x1 = (int) (x0 + 1000*(-b));
+                    int y1 = (int) (y0 + 1000*(a));
+                    int x2 = (int) (x0 - 1000*(-b));
+                    int y2 = (int) (y0 - 1000*(a));
 
-                    drawingContext.DrawLine(new System.Windows.Media.Pen(System.Windows.Media.Brushes.Black, 1), new System.Windows.Point(x1, y1), new System.Windows.Point(x2, y2));
+                    graphics.DrawLine(new Pen(Color.Red, 2), x1, y1, x2, y2);
                 }
 
-                var mergedImage = new RenderTargetBitmap((int)Source.Width, (int)Source.Height, 96, 96, PixelFormats.Pbgra32);
-                mergedImage.Render(drawingVisual);
 
-                Source = mergedImage;
+                Source = clone;
             };
         }
 
@@ -103,12 +99,12 @@ namespace Hough
             }
         }
 
-        public BitmapSource Source
+        public Bitmap Source
         {
-            get { return _bitmapSource; }
+            get { return _bitmap; }
             set
             {
-                _bitmapSource = value;
+                _bitmap = value;
                 RaisePropertyChangedEvent("Source");
             }
         }
@@ -125,7 +121,7 @@ namespace Hough
             }
         }
 
-        public List<Point> BlackPixels { get; set; }
+        public IEnumerable<Point> BlackPixels { get; set; }
 
         public RelayCommand OpenFileCommand
         {
@@ -136,7 +132,7 @@ namespace Hough
 
         private void GetLines()
         {
-            _accumulator = new Accumulator(Source.PixelWidth, Source.PixelHeight, 90, 90);
+            _accumulator = new Accumulator(Source.Width, Source.Height, 16, 16);
             //Accumulator converter = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4, 4);
 
             BlackPixels.GetCombinationPairs()
