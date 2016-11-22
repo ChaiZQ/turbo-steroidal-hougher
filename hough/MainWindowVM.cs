@@ -41,41 +41,64 @@ namespace Hough
                 GetLines();
             });
 
-            MouseMoveOverAccumulator = point =>
+            MouseMoveOverAccumulator = MoveOverAccumulatorHandler;
+        }
+
+        private void MoveOverAccumulatorHandler(System.Drawing.Point point)
+        {
+            Debug.WriteLine("{{X=" + point.X + ", Y=" + point.Y + ", Value=" + _accumulator[point.X, point.Y] + "}}");
+            var line = _accumulator.GetLineFromIndex(new List<int>() {point.X, point.Y});
+
+            var minLine = new PolarPointF()
             {
-                Debug.WriteLine("{{X=" + point.X + ", Y=" + point.Y + ", Value=" + _accumulator[point.X, point.Y] + "}}");
-                var line = _accumulator.GetLineFromIndex(new List<int>() { point.X, point.Y });
-
-                var minRho = line.Rho - _accumulator.RhoDelta / 2;
-                var maxRho = line.Rho + _accumulator.RhoDelta / 2;
-
-                minRho = minRho * (180.0 / Math.PI);
-                maxRho = maxRho * (180.0 / Math.PI);
-
-                var minTheta = line.Theta - _accumulator.ThetaDelta / 2;
-                var maxTheta = line.Theta + _accumulator.ThetaDelta / 2;
-                Debug.WriteLine("Rho: {{" + minRho + " - " + maxRho + "}}");
-                Debug.WriteLine("Theta: {{" + minTheta + " - " + maxTheta + "}}");
-
-                Bitmap clone = (Bitmap) Image.FromFile(ImagePath);
-
-                using (var graphics = Graphics.FromImage(clone))
-                {
-                    var a = Math.Cos(line.Rho);
-                    var b = Math.Sin(line.Rho);
-                    var x0 = a*(line.Theta);
-                    var y0 = b*(line.Theta);
-                    int x1 = (int) (x0 + 1000*(-b));
-                    int y1 = (int) (y0 + 1000*(a));
-                    int x2 = (int) (x0 - 1000*(-b));
-                    int y2 = (int) (y0 - 1000*(a));
-
-                    graphics.DrawLine(new Pen(Color.Red, 2), x1, y1, x2, y2);
-                }
-
-
-                Source = clone;
+                Rho = line.Rho - _accumulator.RhoDelta/2,
+                Theta = line.Theta - _accumulator.ThetaDelta/2,
             };
+
+            var maxLine = new PolarPointF()
+            {
+                Rho = line.Rho + _accumulator.RhoDelta/2,
+                Theta = line.Theta + _accumulator.ThetaDelta/2,
+            };
+            Debug.WriteLine("Minimum: " + minLine);
+            Debug.WriteLine("maximum: " + maxLine);
+
+            Bitmap clone = (Bitmap) Image.FromFile(ImagePath);
+
+            using (var graphics = Graphics.FromImage(clone))
+            {
+                var tempLine1 = new PolarPointF()
+                {
+                    Rho = line.Rho,
+                    Theta = minLine.Theta
+                };
+                var tempLine2 = new PolarPointF()
+                {
+                    Rho = line.Rho,
+                    Theta = maxLine.Theta
+                };
+                DrawPolarLine(tempLine1, graphics, new Pen(Color.Chartreuse, 1));
+                DrawPolarLine(tempLine2, graphics, new Pen(Color.Green, 1));
+
+                DrawPolarLine(line, graphics, new Pen(Color.Red, 2));
+            }
+
+
+            Source = clone;
+        }
+
+        private static void DrawPolarLine(PolarPointF line, Graphics graphics,Pen pen)
+        {
+            var a = Math.Cos(line.Rho);
+            var b = Math.Sin(line.Rho);
+            var x0 = a*(line.Theta);
+            var y0 = b*(line.Theta);
+            int x1 = (int) (x0 + 1000*(-b));
+            int y1 = (int) (y0 + 1000*(a));
+            int x2 = (int) (x0 - 1000*(-b));
+            int y2 = (int) (y0 - 1000*(a));
+
+            graphics.DrawLine(pen, x1, y1, x2, y2);
         }
 
 
