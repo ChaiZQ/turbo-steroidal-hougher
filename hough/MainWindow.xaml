@@ -28,7 +28,9 @@
         <Image Source="{Binding Source}"  
                RenderOptions.BitmapScalingMode="NearestNeighbor"
                RenderOptions.EdgeMode="Unspecified" 
-               HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1" Grid.Row="1"/>
+               HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1" Grid.Row="1">
+
+        </Image>
 
         <Image 
             Name="AccumulatorImageControl"

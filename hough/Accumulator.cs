@@ -113,6 +113,6 @@ namespace Hough
             return (byte[,]) _accumulator.Clone();
         }
 
-        public byte this[int rho, int theta] => _accumulator[rho, theta];
+        public byte this[int rho, int theta] { get { return _accumulator[rho, theta]; } }
     }
 }

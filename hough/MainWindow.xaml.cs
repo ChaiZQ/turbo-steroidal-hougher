@@ -43,8 +43,8 @@ namespace Hough
                 Y = (int) (position.Y*bitmap.Height/AccumulatorImageControl.ActualHeight),
             };
      
-
-            action?.Invoke(positionOnBitmap);
+            if(action != null)
+                action.Invoke(positionOnBitmap);
         }
     }
 }

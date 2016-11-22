@@ -42,7 +42,7 @@ namespace Hough
                     var px = classifiedPixels[j * h + i];
 
                     if (px == 0)
-                        blackPoints.Add(new Point(j, i));
+                        blackPoints.Add(new Point(i, j));
                 }
             }
 
