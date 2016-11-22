@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Hough.Presentation.Service;
+using Hough.Presentation.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Hough.WpfStuff;
 
-namespace Hough
+namespace Hough.Presentation
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -25,13 +26,14 @@ namespace Hough
         {
             InitializeComponent();
 
-            DataContext = new MainWindowVM(new ShellService());
+
+            this.DataContext = new MainWindowVM(new ShellService());
         }
 
         private void AccumulatorImageControl_OnMouseMove(object sender, MouseEventArgs e)
         {
-            
-            var vm  = (DataContext as MainWindowVM);
+
+            var vm = (DataContext as MainWindowVM);
             if (vm == null) return;
             var action = vm.MouseMoveOverAccumulator;
             var bitmap = vm.AccumulatorImage;
@@ -39,11 +41,11 @@ namespace Hough
 
             var positionOnBitmap = new System.Drawing.Point()
             {
-                X = (int) (position.X*bitmap.Width/AccumulatorImageControl.ActualWidth),
-                Y = (int) (position.Y*bitmap.Height/AccumulatorImageControl.ActualHeight),
+                X = (int)(position.X * bitmap.Width / AccumulatorImageControl.ActualWidth),
+                Y = (int)(position.Y * bitmap.Height / AccumulatorImageControl.ActualHeight),
             };
-     
-            if(action != null)
+
+            if (action != null)
                 action.Invoke(positionOnBitmap);
         }
     }

@@ -1,21 +1,20 @@
-﻿<Window x:Class="Hough.MainWindow"
+﻿<Window x:Class="Hough.Presentation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Hough"
-        xmlns:vm="clr-namespace:Hough"
-        xmlns:converter="clr-namespace:Hough"
-        xmlns:wpfStuff="clr-namespace:Hough.WpfStuff"
+        xmlns:local="clr-namespace:Hough.Presentation"
+        xmlns:vm="clr-namespace:Hough.Presentation.ViewModel"
+        xmlns:converter="clr-namespace:Hough.Presentation.Converter"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="800"
         Background="LightSteelBlue">
     <Window.Resources>
-        <wpfStuff:BinaryImageConverter x:Key="binary-image-converter"></wpfStuff:BinaryImageConverter>
+        <converter:BinaryImageConverter x:Key="binary-image-converter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="43"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -38,6 +37,12 @@
                HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="2" Grid.Row="1"
                MouseMove="AccumulatorImageControl_OnMouseMove"/>
         <TextBlock Text="{Binding ImagePath}"  Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,12,10,12" Height="16"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" >
+            <Label Content="Rho interval:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <TextBox HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding RhoInterval}" Width="66" Height="23" VerticalAlignment="Top"/>
+            <Label Content="Theta interval:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <TextBox HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding ThetaInterval}" VerticalAlignment="Top" Width="66"/>
+        </StackPanel>
     </Grid>
 </Window>
 

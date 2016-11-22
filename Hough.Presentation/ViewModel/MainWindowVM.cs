@@ -5,26 +5,27 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using Hough.Utils;
-using Hough.WpfStuff;
 using Point = System.Windows.Point;
 using System.Windows.Media;
 using System.Windows;
 using Color = System.Drawing.Color;
 using Pen = System.Drawing.Pen;
+using Hough.Presentation.Service;
 
-namespace Hough
+namespace Hough.Presentation.ViewModel
 {
     class MainWindowVM : ViewModel
     {
         private IShellService _shellService;
 
         private string _imagePath;
-        private byte[] _imageBytes;
         private RelayCommand _openFileCommand;
         private Bitmap _bitmap;
         private Bitmap _accumulatorImage;
         private Accumulator _accumulator;
 
+        private int _rhoInterval = 180;
+        private int _thetaInterval = 100;
 
         public MainWindowVM(IShellService shellService)
         {
@@ -73,11 +74,9 @@ namespace Hough
                     graphics.DrawLine(new Pen(Color.Red, 2), x1, y1, x2, y2);
                 }
 
-
                 Source = clone;
             };
         }
-
 
         public string ImagePath
         {
@@ -86,16 +85,6 @@ namespace Hough
             {
                 _imagePath = value;
                 RaisePropertyChangedEvent("ImagePath");
-            }
-        }
-
-        public byte[] ImagePixels
-        {
-            get { return _imageBytes; }
-            set
-            {
-                _imageBytes = value;
-                RaisePropertyChangedEvent("ImagePixels");
             }
         }
 
@@ -109,7 +98,25 @@ namespace Hough
             }
         }
 
-        //public Lin
+        public int RhoInterval
+        {
+            get { return _rhoInterval; }
+            set
+            {
+                _rhoInterval = value;
+                RaisePropertyChangedEvent("RhoInterval");
+            }
+        }
+
+        public int ThetaInterval
+        {
+            get { return _thetaInterval; }
+            set
+            {
+                _thetaInterval = value;
+                RaisePropertyChangedEvent("ThetaInterval");
+            }
+        }
 
         public Bitmap AccumulatorImage
         {
@@ -132,8 +139,7 @@ namespace Hough
 
         private void GetLines()
         {
-            _accumulator = new Accumulator(Source.Width, Source.Height, 16, 16);
-            //Accumulator converter = new Accumulator(Source.PixelWidth, Source.PixelHeight, 4, 4);
+            _accumulator = new Accumulator(Source.Width, Source.Height, RhoInterval, ThetaInterval);
 
             BlackPixels.GetCombinationPairs()
                 .Select(PointUtils.GetPolarLineFromCartesianPoints)
