@@ -63,8 +63,8 @@ namespace Hough
                     var overlayImage = new BitmapImage(new Uri(ImagePath));
                     drawingContext.DrawImage(overlayImage, new Rect(0, 0, overlayImage.Width, overlayImage.Height));
 
-                    var a = Math.Cos(line.Rho - Math.PI / 2);
-                    var b = Math.Sin(line.Rho - Math.PI / 2);
+                    var a = Math.Cos(line.Rho);
+                    var b = Math.Sin(line.Rho);
                     var x0 = a * (line.Theta);
                     var y0 = b * (line.Theta);
                     var x1 = x0 + 1000 * (-b);
