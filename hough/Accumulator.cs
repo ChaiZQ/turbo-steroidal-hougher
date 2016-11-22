@@ -23,7 +23,7 @@ namespace Hough
                 imageWidth*imageWidth);
 
 
-            ThetaDelta = 1.5*_diagonal/thetaIntervalCount;
+            ThetaDelta = 2*_diagonal/thetaIntervalCount;
             RhoDelta = Math.PI/_rhoIntervalCount;
 
 
@@ -36,7 +36,7 @@ namespace Hough
             return new List<int>()
             {
                 _rhoIntervalCount + 1,
-                (int) Math.Round(_diagonal*1.5/ThetaDelta)
+                (int) Math.Round(_diagonal*2/ThetaDelta)
             };
         }
 
@@ -45,7 +45,7 @@ namespace Hough
             return new List<int>()
             {
                 (int) Math.Round(pointF.Rho/RhoDelta),
-                (int) ((pointF.Theta + 0.5*_diagonal)/ThetaDelta) // auto math flor
+                (int) ((pointF.Theta +_diagonal)/ThetaDelta) // auto math flor
             };
         }
 
@@ -54,14 +54,13 @@ namespace Hough
             return new PolarPointF()
             {
                 Rho = indices[0]*RhoDelta,
-                Theta = (-0.5*_diagonal) + (indices[1]*ThetaDelta) + (0.5*ThetaDelta)
+                Theta = (-_diagonal) + (indices[1]*ThetaDelta) + (0.5*ThetaDelta)
             };
         }
 
         public void AddVote(PolarPointF pointF)
         {
             var index = GetAccumulatorIndex(pointF);
-            if (index[1] < 0) return; //todo 
             _accumulator[index[0], index[1]]++;
            
         }
