@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows;
+using System.Drawing;
 using Hough;
 using Hough.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

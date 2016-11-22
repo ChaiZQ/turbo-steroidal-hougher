@@ -5,7 +5,7 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using Hough.Utils;
-using Point = System.Windows.Point;
+using Point = System.Drawing.Point;
 using System.Windows.Media;
 using System.Windows;
 using Hough.Presentation.Service;

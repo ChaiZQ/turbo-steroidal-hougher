@@ -1,5 +1,5 @@
 ﻿using System;
-using Point = System.Windows.Point;
+using Point = System.Drawing.Point;
 
 namespace Hough.Utils
 {
