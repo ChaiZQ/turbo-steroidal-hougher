@@ -10,7 +10,7 @@ namespace Hough.Utils
             var dx = pair.Item1.X - pair.Item2.X;
             var dy = pair.Item1.Y - pair.Item2.Y;
             var rho = Math.Atan2(dy,dx)-(Math.PI/2);
-            var theta = -(pair.Item1.X*Math.Cos(rho) + pair.Item1.Y*Math.Sin(rho));
+            var theta = pair.Item1.X*Math.Cos(rho) + pair.Item1.Y*Math.Sin(rho);
             var line = new PolarPointF()
             {
                 Rho = rho,
