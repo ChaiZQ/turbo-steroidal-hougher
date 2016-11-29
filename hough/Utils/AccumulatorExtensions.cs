@@ -6,21 +6,30 @@ namespace Hough.Utils
     {
         public static byte[,] Spline(this byte[,] accumulator, double[,] splineFunction)
         {
+            if (splineFunction.GetLength(0)!= splineFunction.GetLength(1))
+            {
+                throw new Exception("Funkcja splatana powinna być kwadratowa");
+            }
+            if (splineFunction.GetLength(0)%2!=1)
+            {
+                throw new Exception("");
+            }
             var splinedAccumulator = new byte[accumulator.GetLength(0), accumulator.GetLength(1)];
 
 
             int height = accumulator.GetLength(0);
-            int width = accumulator.GetLength(1); 
-            for (var y = 3; y < height - 3; y++)
+            int width = accumulator.GetLength(1);
+            var l = splineFunction.GetLength(0)/2; // half spline length
+            for (var y = l; y < height - l; y++)
             {
-                for (var x = 3; x < width - 3; x++)
+                for (var x = l; x < width - l; x++)
                 {
                     double c = 0;
-                    for (var dy = -3; dy <= 3; dy++)
+                    for (var dy = -l; dy <= l; dy++)
                     {
-                        for (var dx = -3; dx <= 3; dx++)
+                        for (var dx = -l; dx <= l; dx++)
                         {
-                            c += accumulator[y + dy , + x + dx] * splineFunction[dy + 3, dx + 3];
+                            c += accumulator[y + dy , + x + dx] * splineFunction[dy + l, dx + l];
                         }
                     }
                     splinedAccumulator[y , + x] = (byte)c;
