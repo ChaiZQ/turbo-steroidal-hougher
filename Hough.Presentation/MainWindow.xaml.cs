@@ -48,5 +48,23 @@ namespace Hough.Presentation
             if (action != null)
                 action.Invoke(positionOnBitmap);
         }
+
+        private void AccumulatorImageControl_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var vm = (DataContext as MainWindowVM);
+            if (vm == null) return;
+            var action = vm.MouseClickAccumulator;
+            var bitmap = vm.AccumulatorImage;
+            Point position = e.GetPosition((IInputElement)sender);
+
+            var positionOnBitmap = new System.Drawing.Point()
+            {
+                X = (int)(position.X * bitmap.Width / AccumulatorImageControl.ActualWidth),
+                Y = (int)(position.Y * bitmap.Height / AccumulatorImageControl.ActualHeight),
+            };
+
+            if (action != null)
+                action.Invoke(positionOnBitmap);
+        }
     }
 }

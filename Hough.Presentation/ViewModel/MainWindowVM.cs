@@ -45,6 +45,7 @@ namespace Hough.Presentation.ViewModel
             });
 
             MouseMoveOverAccumulator = MoveOverAccumulatorHandler;
+            MouseClickAccumulator = MoveClickHandler;
         }
 
         private void MoveOverAccumulatorHandler(System.Drawing.Point point)
@@ -84,6 +85,39 @@ namespace Hough.Presentation.ViewModel
                 DrawPolarLine(tempLine2, graphics, new Pen(Color.Green, 1));
 
                 DrawPolarLine(line, graphics, new Pen(Color.Red, 2));
+            }
+
+
+            Source = clone;
+        }
+
+        private void MoveClickHandler(System.Drawing.Point point)
+        {
+            Bitmap clone = (Bitmap)Image.FromFile(ImagePath);
+
+
+
+            using (var graphics = Graphics.FromImage(clone))
+            {
+                BlackPixels.GetCombinationPairs()
+                    .Select(t => new
+                    {
+                        Points = t,
+                        line = PointUtils.GetPolarLineFromCartesianPoints(t),
+                    })
+                    .Where(p =>
+                    {
+                        var index = _accumulator.GetAccumulatorIndex(p.line);
+                        return index[0] == point.X && index[1] == point.Y;
+                    })
+                    .Select(p => p.Points)
+                    .ToList()
+                    .ForEach(points =>
+                    {
+                        graphics.DrawLine(new Pen(Color.Magenta), points.Item1, points.Item2);
+//                        clone.SetPixel(points.Item1.X, points.Item1.Y, Color.Magenta);
+//                        clone.SetPixel(points.Item2.X, points.Item2.Y, Color.Magenta);
+                    });
             }
 
 
@@ -176,6 +210,7 @@ namespace Hough.Presentation.ViewModel
         }
 
         public Action<System.Drawing.Point> MouseMoveOverAccumulator { get; set; }
+        public Action<System.Drawing.Point> MouseClickAccumulator { get; set; }
 
         private void GetLines()
         {
@@ -190,7 +225,7 @@ namespace Hough.Presentation.ViewModel
 
             var bitmap = _accumulator
                 .GetAccumulatorTable()
-                .Spline(AccumulatorExtensions.GenerateNormalizedGauss(7))
+                .Spline(AccumulatorExtensions.GenerateNormalizedGauss(1))
                 .ConvertToBitmap();
             AccumulatorImage = bitmap;
 
