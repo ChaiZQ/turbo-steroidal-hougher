@@ -188,7 +188,10 @@ namespace Hough.Presentation.ViewModel
 
             var line = _accumulator.GetMaxValue();
 
-            var bitmap = _accumulator.ConvertToBitmap();
+            var bitmap = _accumulator
+                .GetAccumulatorTable()
+                .Spline(AccumulatorExtensions.GenerateNormalizedGauss(7))
+                .ConvertToBitmap();
             AccumulatorImage = bitmap;
 
 

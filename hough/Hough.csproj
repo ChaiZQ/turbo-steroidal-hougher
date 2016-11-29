@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Accumulator.cs" />
     <Compile Include="ImageProcessor.cs" />
+    <Compile Include="Utils\AccumulatorExtensions.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\LinqExt.cs" />
   </ItemGroup>

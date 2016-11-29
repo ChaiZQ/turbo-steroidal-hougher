@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 
 namespace Hough.Utils
 {
     public static class BitmapUtils
     {
-        public static unsafe Bitmap ConvertToBitmap(this Accumulator accumulator)
+        public static unsafe Bitmap ConvertToBitmap(this byte[,] bytes)
         {
-            var bytes = accumulator.GetAccumulatorTable();
-            var dimensions = accumulator.GetAccumulatorDimensions();
+            var dimensions = new[]
+            {
+                bytes.GetLength(0),
+                bytes.GetLength(1),
+            };
             var width = dimensions[0];
             var height = dimensions[1];
 
+            byte maxValue = bytes.Cast<byte>().Max();
+
             Bitmap bitmap  = new Bitmap(dimensions[0],dimensions[1]);
-            var maxValue = accumulator.MaxValue();
 
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
