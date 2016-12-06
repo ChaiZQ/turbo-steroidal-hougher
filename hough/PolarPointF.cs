@@ -4,7 +4,6 @@ namespace Hough
 {
     public class PolarPointF
     {
-        private double _rho;
 
         public PolarPointF(double rho, double theta)
         {
@@ -19,15 +18,7 @@ namespace Hough
         /// <summary>
         ///     value in radians from 0 to pi/2
         /// </summary>
-        public double Rho
-        {
-            get { return _rho; }
-            set
-            {
-                double m = Math.PI;
-                _rho = (value%m + m)%m;
-            }
-        }
+        public double Rho { get; set; }
 
         /// <summary>
         ///     accept positive and negative values
@@ -36,7 +27,7 @@ namespace Hough
 
         protected bool Equals(PolarPointF other)
         {
-            return _rho.Equals(other._rho) && Theta.Equals(other.Theta);
+            return Rho.Equals(other.Rho) && Theta.Equals(other.Theta);
         }
 
         public override string ToString()
@@ -57,7 +48,7 @@ namespace Hough
         {
             unchecked
             {
-                return (_rho.GetHashCode()*397) ^ Theta.GetHashCode();
+                return (Rho.GetHashCode() * 397) ^ Theta.GetHashCode();
             }
         }
     }

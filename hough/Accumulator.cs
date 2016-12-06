@@ -10,6 +10,9 @@ namespace Hough
     {
         private readonly double _diagonal;
         private readonly int _rhoIntervalCount;
+        private readonly int _thetaIntervalCount;
+        private readonly double _rhoOffset = Math.PI/2;
+
         public readonly double ThetaDelta;
         public readonly double RhoDelta;
 
@@ -18,14 +21,15 @@ namespace Hough
         public Accumulator(int imageWidth, int imageHeigth, int rhoIntervalCount, int thetaIntervalCount)
         {
             _rhoIntervalCount = rhoIntervalCount;
+            _thetaIntervalCount = thetaIntervalCount;
 
             _diagonal = Math.Sqrt(
-                imageHeigth*imageHeigth +
-                imageWidth*imageWidth);
+                imageHeigth * imageHeigth +
+                imageWidth * imageWidth);
 
 
-            ThetaDelta = 2*_diagonal/thetaIntervalCount;
-            RhoDelta = Math.PI/_rhoIntervalCount;
+            ThetaDelta = _diagonal / thetaIntervalCount;
+            RhoDelta = (Math.PI * 3 / 2) / _rhoIntervalCount;
 
 
             var dimensions = GetAccumulatorDimensions();
@@ -36,8 +40,8 @@ namespace Hough
         {
             return new List<int>()
             {
-                _rhoIntervalCount + 1,
-                (int) Math.Round(_diagonal*2/ThetaDelta)
+                _rhoIntervalCount,
+                _thetaIntervalCount
             };
         }
 
@@ -45,8 +49,8 @@ namespace Hough
         {
             return new List<int>()
             {
-                (int) Math.Round(pointF.Rho/RhoDelta),
-                (int) ((pointF.Theta +_diagonal)/ThetaDelta) // auto math flor
+                (int) Math.Floor((pointF.Rho + _rhoOffset) / RhoDelta),
+                (int) ((pointF.Theta)/ThetaDelta) // auto math flor
             };
         }
 
@@ -54,17 +58,16 @@ namespace Hough
         {
             return new PolarPointF()
             {
-                Rho = indices[0]*RhoDelta,
-                Theta = (-_diagonal) + (indices[1]*ThetaDelta) + (0.5*ThetaDelta)
+                Rho = (indices[0] * RhoDelta - _rhoOffset),
+                Theta = indices[1] * ThetaDelta
             };
         }
 
         public void AddVote(PolarPointF pointF)
         {
             var index = GetAccumulatorIndex(pointF);
-            
-                Interlocked.Increment(ref _accumulator[index[0], index[1]]);
-           
+
+            Interlocked.Increment(ref _accumulator[index[0], index[1]]);
         }
 
         public int MaxValue()
@@ -106,12 +109,12 @@ namespace Hough
                 }
             }
 
-            return GetLineFromIndex(new List<int>() {rhoIndex, thetaIndex});
+            return GetLineFromIndex(new List<int>() { rhoIndex, thetaIndex });
         }
 
         public int[,] GetAccumulatorTable()
         {
-            return (int[,]) _accumulator.Clone();
+            return (int[,])_accumulator.Clone();
         }
 
         public int this[int rho, int theta] { get { return _accumulator[rho, theta]; } }
