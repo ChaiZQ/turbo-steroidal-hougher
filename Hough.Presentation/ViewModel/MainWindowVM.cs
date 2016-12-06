@@ -21,7 +21,6 @@ namespace Hough.Presentation.ViewModel
         private IShellService _shellService;
 
         private string _imagePath;
-        private byte[] _imageBytes;
         private RelayCommand _openFileCommand;
         private Bitmap _bitmap;
         private Bitmap _accumulatorImage;
@@ -151,15 +150,7 @@ namespace Hough.Presentation.ViewModel
             }
         }
 
-        public byte[] ImagePixels
-        {
-            get { return _imageBytes; }
-            set
-            {
-                _imageBytes = value;
-                RaisePropertyChangedEvent("ImagePixels");
-            }
-        }
+        
 
         public Bitmap Source
         {
@@ -214,7 +205,7 @@ namespace Hough.Presentation.ViewModel
         public Action<System.Drawing.Point> MouseMoveOverAccumulator { get; set; }
         public Action<System.Drawing.Point> MouseClickAccumulator { get; set; }
 
-        private void GetLines()
+        private async void GetLines()
         {
             _accumulator = new Accumulator(Source.Width, Source.Height, RhoInterval, ThetaInterval);
 
@@ -222,7 +213,8 @@ namespace Hough.Presentation.ViewModel
                 .Select(PointUtils.GetPolarLineFromCartesianPoints);
 
 
-            ThreadPool.QueueUserWorkItem(delegate {
+            await Task.Run(delegate
+            {
                 Parallel.ForEach(polarPointFs, f =>
                 {
                     _accumulator.AddVote(f);
@@ -234,15 +226,16 @@ namespace Hough.Presentation.ViewModel
                     .GetAccumulatorTable()
                     .Spline(AccumulatorExtensions.GenerateNormalizedGauss(1))
                     .ConvertToBitmap();
-                AccumulatorImage = bitmap;
+
+                Application.Current.Dispatcher.Invoke(() => AccumulatorImage = bitmap);
 
 
                 Debug.WriteLine(line);
             });
-            
 
 
-            
+
+
         }
     }
 }

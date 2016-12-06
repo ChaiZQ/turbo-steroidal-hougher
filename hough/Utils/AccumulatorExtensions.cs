@@ -4,7 +4,7 @@ namespace Hough.Utils
 {
     public static class AccumulatorExtensions
     {
-        public static byte[,] Spline(this byte[,] accumulator, double[,] splineFunction)
+        public static int[,] Spline(this int[,] accumulator, double[,] splineFunction)
         {
             if (splineFunction.GetLength(0)!= splineFunction.GetLength(1))
             {
@@ -14,7 +14,7 @@ namespace Hough.Utils
             {
                 throw new Exception("");
             }
-            var splinedAccumulator = new byte[accumulator.GetLength(0), accumulator.GetLength(1)];
+            var splinedAccumulator = new int[accumulator.GetLength(0), accumulator.GetLength(1)];
 
 
             int height = accumulator.GetLength(0);
@@ -32,7 +32,7 @@ namespace Hough.Utils
                             c += accumulator[y + dy , + x + dx] * splineFunction[dy + l, dx + l];
                         }
                     }
-                    splinedAccumulator[y , + x] = (byte)c;
+                    splinedAccumulator[y , + x] = (int)c;
                 }
             }
 

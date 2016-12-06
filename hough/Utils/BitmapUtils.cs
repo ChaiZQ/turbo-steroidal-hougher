@@ -7,7 +7,7 @@ namespace Hough.Utils
 {
     public static class BitmapUtils
     {
-        public static unsafe Bitmap ConvertToBitmap(this byte[,] bytes)
+        public static unsafe Bitmap ConvertToBitmap(this int[,] bytes)
         {
             var dimensions = new[]
             {
@@ -17,7 +17,7 @@ namespace Hough.Utils
             var width = dimensions[0];
             var height = dimensions[1];
 
-            byte maxValue = bytes.Cast<byte>().Max();
+            int maxValue = bytes.Cast<int>().Max();
 
             Bitmap bitmap  = new Bitmap(dimensions[0],dimensions[1]);
 

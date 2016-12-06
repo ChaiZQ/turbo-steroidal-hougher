@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 
 namespace Hough
 {
@@ -12,7 +13,7 @@ namespace Hough
         public readonly double ThetaDelta;
         public readonly double RhoDelta;
 
-        private readonly byte[,] _accumulator;
+        private readonly int[,] _accumulator;
 
         public Accumulator(int imageWidth, int imageHeigth, int rhoIntervalCount, int thetaIntervalCount)
         {
@@ -28,7 +29,7 @@ namespace Hough
 
 
             var dimensions = GetAccumulatorDimensions();
-            _accumulator = new byte[dimensions[0], dimensions[1]];
+            _accumulator = new int[dimensions[0], dimensions[1]];
         }
 
         public List<int> GetAccumulatorDimensions()
@@ -61,13 +62,14 @@ namespace Hough
         public void AddVote(PolarPointF pointF)
         {
             var index = GetAccumulatorIndex(pointF);
-            _accumulator[index[0], index[1]]++;
+            
+                Interlocked.Increment(ref _accumulator[index[0], index[1]]);
            
         }
 
-        public byte MaxValue()
+        public int MaxValue()
         {
-            byte max = 0;
+            int max = 0;
             var rhoIndex = 0;
             var thetaIndex = 0;
             for (int rho = 0; rho < _accumulator.GetLength(0); rho++)
@@ -107,11 +109,11 @@ namespace Hough
             return GetLineFromIndex(new List<int>() {rhoIndex, thetaIndex});
         }
 
-        public byte[,] GetAccumulatorTable()
+        public int[,] GetAccumulatorTable()
         {
-            return (byte[,]) _accumulator.Clone();
+            return (int[,]) _accumulator.Clone();
         }
 
-        public byte this[int rho, int theta] { get { return _accumulator[rho, theta]; } }
+        public int this[int rho, int theta] { get { return _accumulator[rho, theta]; } }
     }
 }
