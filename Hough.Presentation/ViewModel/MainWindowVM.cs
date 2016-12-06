@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Hough.Utils;
 using Point = System.Drawing.Point;
@@ -216,21 +218,31 @@ namespace Hough.Presentation.ViewModel
         {
             _accumulator = new Accumulator(Source.Width, Source.Height, RhoInterval, ThetaInterval);
 
-            BlackPixels.GetCombinationPairs()
-                .Select(PointUtils.GetPolarLineFromCartesianPoints)
-                .ToList()
-                .ForEach(_accumulator.AddVote);
-
-            var line = _accumulator.GetMaxValue();
-
-            var bitmap = _accumulator
-                .GetAccumulatorTable()
-                .Spline(AccumulatorExtensions.GenerateNormalizedGauss(1))
-                .ConvertToBitmap();
-            AccumulatorImage = bitmap;
+            var polarPointFs = BlackPixels.GetCombinationPairs()
+                .Select(PointUtils.GetPolarLineFromCartesianPoints);
 
 
-            Debug.WriteLine(line);
+            ThreadPool.QueueUserWorkItem(delegate {
+                Parallel.ForEach(polarPointFs, f =>
+                {
+                    _accumulator.AddVote(f);
+                });
+
+                var line = _accumulator.GetMaxValue();
+
+                var bitmap = _accumulator
+                    .GetAccumulatorTable()
+                    .Spline(AccumulatorExtensions.GenerateNormalizedGauss(1))
+                    .ConvertToBitmap();
+                AccumulatorImage = bitmap;
+
+
+                Debug.WriteLine(line);
+            });
+            
+
+
+            
         }
     }
 }
