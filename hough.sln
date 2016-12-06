@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hough", "hough\Hough.csproj", "{C64193F5-4321-4756-8A67-3A117EED68F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoughTestProjects", "HoughTestProjects\HoughTestProjects.csproj", "{5B5C78EB-B631-4535-91AD-0942DB0DAF21}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hough.Presentation", "Hough.Presentation\Hough.Presentation.csproj", "{E10CFCD7-7BED-4905-89B2-9B2BE9C394CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hough.ResistanceTest", "Hough.ResistanceTest\Hough.ResistanceTest.csproj", "{150650A7-7897-48DD-BC5C-66DCB2DAC1CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +29,10 @@ Global
 		{E10CFCD7-7BED-4905-89B2-9B2BE9C394CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E10CFCD7-7BED-4905-89B2-9B2BE9C394CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E10CFCD7-7BED-4905-89B2-9B2BE9C394CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{150650A7-7897-48DD-BC5C-66DCB2DAC1CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150650A7-7897-48DD-BC5C-66DCB2DAC1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150650A7-7897-48DD-BC5C-66DCB2DAC1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{150650A7-7897-48DD-BC5C-66DCB2DAC1CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
