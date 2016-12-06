@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using Hough.Utils;
 
@@ -14,27 +11,27 @@ namespace Hough.ResistanceTest
         public static Random Rand = new Random();
         static void Main(string[] args)
         {
-            const string imagePath = @"test-image.png";
+            const string imagePath = "MultipleLines.bmp";
 
             Bitmap bitmap = (Bitmap) Image.FromFile(imagePath);
 
-            Console.WriteLine("=====RandomNoise=======");
+            Console.WriteLine("=====Random Noise=======");
             for (int i = 0; i < 100; i++)
             {
-                var max = NoiseAndFindLine(bitmap, list => list.RandomNoise(bitmap, i));
+                var max = FindLineWithNoise(bitmap, list => list.RandomNoise(bitmap, i));
                 Console.WriteLine($"Noise%: {i}%, Rho: {max.Item1.Rho}, Theta: {max.Item1.Theta}, Votes: {max.Item2}");
             }
-            Console.WriteLine("=====LinearNoise=======");
+            Console.WriteLine("=====Linear Noise=======");
             for (int i = 0; i < 100; i++)
             {
-                var max = NoiseAndFindLine(bitmap,list => list.LinearNoise(bitmap,i));
+                var max = FindLineWithNoise(bitmap,list => list.LinearNoise(bitmap,i));
                 Console.WriteLine($"Noise%: {i}%, Rho: {max.Item1.Rho}, Theta: {max.Item1.Theta}, Votes: {max.Item2}");
             }
 
             Console.ReadKey();
         }
 
-        private static Tuple<PolarPointF, int> NoiseAndFindLine(Bitmap bitmap, Func<List<Point>,List<Point>> noise )
+        private static Tuple<PolarPointF, int> FindLineWithNoise(Bitmap bitmap, Func<List<Point>,List<Point>> noise )
         {
             
             var accumulator = new Accumulator(bitmap.Width, bitmap.Height, 180, 100);
