@@ -209,16 +209,16 @@ namespace Hough.Presentation.ViewModel
         {
             _accumulator = new Accumulator(Source.Width, Source.Height, RhoInterval, ThetaInterval);
 
-            var polarPointFs = BlackPixels.GetCombinationPairs()
-                .Select(PointUtils.GetPolarLineFromCartesianPoints);
+           
 
 
             await Task.Run(delegate
             {
-                Parallel.ForEach(polarPointFs, f =>
-                {
-                    _accumulator.AddVote(f);
-                });
+
+                BlackPixels.GetCombinationPairs()
+                    .Select(PointUtils.GetPolarLineFromCartesianPoints)
+                    .ToList()
+                    .ForEach(_accumulator.AddVote);
 
                 var line = _accumulator.GetMaxValue();
 

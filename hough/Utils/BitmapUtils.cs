@@ -31,7 +31,9 @@ namespace Hough.Utils
                     }
                     else
                     {
-                        int value = (int) (255 - ((double) bytes[x, y]*255/maxValue));
+                        //int value = (int) (255 - ((double) bytes[x, y]*255/maxValue));
+                        int value = (int)(255 - Math.Log10(1 + (double) bytes[x, y]*255/maxValue)*100);
+                        
                         color = Color.FromArgb(value, value, value);
                     }
                     bitmap.SetPixel(x,y, color);
