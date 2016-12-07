@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:Hough.Presentation.ViewModel"
+                    xmlns:views="clr-namespace:Hough.Presentation">
+    <DataTemplate DataType="{x:Type vm:SettingsDialogVM}" >
+        <views:SettingsView/>
+    </DataTemplate>
+</ResourceDictionary>

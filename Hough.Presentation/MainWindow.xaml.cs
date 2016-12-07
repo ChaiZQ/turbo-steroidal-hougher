@@ -2,6 +2,7 @@
 using Hough.Presentation.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,8 @@ namespace Hough.Presentation
                 X = (int)(position.X * bitmap.Width / AccumulatorImageControl.ActualWidth),
                 Y = (int)(position.Y * bitmap.Height / AccumulatorImageControl.ActualHeight),
             };
+
+            Debug.WriteLine($"mouse position: {position.X} : {position.Y}");
 
             if (action != null)
                 action.Invoke(positionOnBitmap);

@@ -26,8 +26,8 @@ namespace Hough.Presentation.ViewModel
         private Bitmap _accumulatorImage;
         private Accumulator _accumulator;
 
-        private int _rhoInterval = 180;
-        private int _thetaInterval = 100;
+        private int _rhoDivisor = 180;
+        private int _thetaDivisor = 100;
 
 
         public MainWindowVM(IShellService shellService)
@@ -116,8 +116,8 @@ namespace Hough.Presentation.ViewModel
                     .ForEach(points =>
                     {
                         graphics.DrawLine(new Pen(Color.Magenta), points.Item1, points.Item2);
-//                        clone.SetPixel(points.Item1.X, points.Item1.Y, Color.Magenta);
-//                        clone.SetPixel(points.Item2.X, points.Item2.Y, Color.Magenta);
+                        //                        clone.SetPixel(points.Item1.X, points.Item1.Y, Color.Magenta);
+                        //                        clone.SetPixel(points.Item2.X, points.Item2.Y, Color.Magenta);
                     });
             }
 
@@ -150,7 +150,7 @@ namespace Hough.Presentation.ViewModel
             }
         }
 
-        
+
 
         public Bitmap Source
         {
@@ -163,25 +163,42 @@ namespace Hough.Presentation.ViewModel
         }
 
         //public Lin
-        public int ThetaInterval
+        public int ThetaDivisor
         {
-            get { return _thetaInterval; }
+            get { return _thetaDivisor; }
             set
             {
-                _thetaInterval = value;
-                RaisePropertyChangedEvent("ThetaInterval");
-                GetLines();
+                _thetaDivisor = value;
+                RaisePropertyChangedEvent("ThetaDivisor");
+                RaisePropertyChangedEvent("ThetaIntervalTooltip");
             }
         }
 
-        public int RhoInterval
+        public int RhoDivisor
         {
-            get { return _rhoInterval; }
+            get { return _rhoDivisor; }
             set
             {
-                _rhoInterval = value;
-                RaisePropertyChangedEvent("RhoInterval");
-                GetLines();
+                _rhoDivisor = value;
+                RaisePropertyChangedEvent("RhoDivisor");
+                RaisePropertyChangedEvent("RhoIntervalTooltip");
+
+            }
+        }
+
+        public string ThetaIntervalTooltip
+        {
+            get
+            {
+                return "1px = " + ThetaDivisor; //todo get from accumulator
+            }
+        }
+
+        public string RhoIntervalTooltip
+        {
+            get
+            {
+                return "1px = " + RhoDivisor; //todo get from accumulator 
             }
         }
 
@@ -195,6 +212,41 @@ namespace Hough.Presentation.ViewModel
             }
         }
 
+        private double gaussFactor = 0.8408964d;
+        public double GaussFactor
+        {
+            get { return gaussFactor; }
+            set
+            {
+                gaussFactor = value;
+                RaisePropertyChangedEvent("GaussFactor");
+            }
+        }
+
+        private int gaussSize = 1;
+        public int GaussSize
+        {
+            get { return gaussSize; }
+            set
+            {
+                gaussSize = value;
+                RaisePropertyChangedEvent("GaussSize");
+            }
+        }
+
+        private bool gaussBlurEnabled;
+        public bool GaussBlurEnabled
+        {
+            get { return gaussBlurEnabled; }
+            set
+            {
+                gaussBlurEnabled = value;
+                RaisePropertyChangedEvent("GaussBlurEnabled");
+
+            }
+        }
+
+
         public IEnumerable<Point> BlackPixels { get; set; }
 
         public RelayCommand OpenFileCommand
@@ -202,15 +254,35 @@ namespace Hough.Presentation.ViewModel
             get { return _openFileCommand; }
         }
 
+        public RelayCommand OpenSettings
+        {
+            get
+            {
+                return new RelayCommand(o =>
+                {
+                    var vm = new SettingsDialogVM(_rhoDivisor, _thetaDivisor, gaussFactor, gaussSize, gaussBlurEnabled);
+
+                    var result = _shellService.ShowDialog("Hough transform output settings", vm);
+                    if (result != true) return;
+
+                    this.ThetaDivisor = vm.ThetaInterval;
+                    this.RhoDivisor = vm.RhoInterval;
+                    this.GaussBlurEnabled = vm.GaussBlurEnabled;
+                    this.GaussFactor = vm.GaussFactor;
+                    this.GaussSize = vm.GaussSize;
+
+                    if (Source != null)
+                        GetLines();
+                });
+            }
+        }
+
         public Action<System.Drawing.Point> MouseMoveOverAccumulator { get; set; }
         public Action<System.Drawing.Point> MouseClickAccumulator { get; set; }
 
         private async void GetLines()
         {
-            _accumulator = new Accumulator(Source.Width, Source.Height, RhoInterval, ThetaInterval);
-
-           
-
+            _accumulator = new Accumulator(Source.Width, Source.Height, RhoDivisor, ThetaDivisor);
 
             await Task.Run(delegate
             {
@@ -224,18 +296,13 @@ namespace Hough.Presentation.ViewModel
 
                 var bitmap = _accumulator
                     .GetAccumulatorTable()
-                    .Spline(AccumulatorExtensions.GenerateNormalizedGauss(1))
+                    .Spline(AccumulatorExtensions.GenerateNormalizedGauss(GaussSize, gaussFactor))
                     .ConvertToBitmap();
 
                 Application.Current.Dispatcher.Invoke(() => AccumulatorImage = bitmap);
 
-
                 Debug.WriteLine(line);
             });
-
-
-
-
         }
     }
 }
