@@ -51,6 +51,11 @@ namespace Hough.Presentation.ViewModel
 
         private void MoveOverAccumulatorHandler(System.Drawing.Point point)
         {
+            Stopwatch watch = new Stopwatch();
+
+             watch.Start();
+
+           
             Debug.WriteLine("{{X=" + point.X + ", Y=" + point.Y + ", Value=" + _accumulator[point.X, point.Y] + "}}");
             var line = _accumulator.GetLineFromIndex(new List<int>() { point.X, point.Y });
 
@@ -90,10 +95,17 @@ namespace Hough.Presentation.ViewModel
 
 
             Source = clone;
+
+            watch.Stop();
+            Console.WriteLine("move: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
         }
 
         private void MoveClickHandler(System.Drawing.Point point)
         {
+            Stopwatch watch = new Stopwatch();
+
+            watch.Start();
+
             Bitmap clone = (Bitmap)Image.FromFile(ImagePath);
 
 
@@ -123,6 +135,9 @@ namespace Hough.Presentation.ViewModel
 
 
             Source = clone;
+
+            watch.Stop();
+            Console.WriteLine("click: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
         }
 
         private static void DrawPolarLine(PolarPointF line, Graphics graphics, Pen pen)
