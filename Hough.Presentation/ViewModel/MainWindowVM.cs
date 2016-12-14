@@ -50,9 +50,10 @@ namespace Hough.Presentation.ViewModel
                     return;
 
                 _openedSource = ImageProcessor.OpenFile(ImagePath);
-                Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, new List<Point>());
+                Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, new List<Tuple<Point, Point>>());
 
                 BlackPixels = ImageProcessor.GetBlackPixels(ImageProcessor.BitmapFromWriteableBitmap(Wb));
+                
                 GetLines();
             });
 
@@ -97,28 +98,15 @@ namespace Hough.Presentation.ViewModel
 
             watch.Start();
             var points = BlackPixels.GetCombinationPairs()
-                .Select(t => new
-                {
-                    Points = t,
-                    line = PointUtils.GetPolarLineFromCartesianPoints(t),
-                })
                 .Where(p =>
                 {
-                    var index = _accumulator.GetAccumulatorIndex(p.line);
+                    var index = _accumulator.GetAccumulatorIndex(PointUtils.GetPolarLineFromCartesianPoints(p));
                     return index[0] == point.X && index[1] == point.Y;
                 });
 
-            var points1 = points
-                .Select(p => p.Points.Item1)
-                .ToList();
-            var points2 = points
-                .Select(p => p.Points.Item2)
-                .ToList();
 
-            points1.AddRange(points2);
+            Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, points);
 
-
-            Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, points1);
             watch.Stop();
             Console.WriteLine("click: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
         }
@@ -275,16 +263,19 @@ namespace Hough.Presentation.ViewModel
 
                 
 
-                BlackPixels.GetCombinationPairs()
-                    .Select(PointUtils.GetPolarLineFromCartesianPoints)
-                    .ToList()
-                    .ForEach(_accumulator.AddVote);
+                var polarPointFs = BlackPixels.GetCombinationPairs()
+                    .Select(PointUtils.GetPolarLineFromCartesianPoints);
+
+                Parallel.ForEach(polarPointFs, f =>
+                {
+                    _accumulator.AddVote(f);
+                });
 
                 var line = _accumulator.GetMaxValue();
 
                 var bitmap = _accumulator
                     .GetAccumulatorTable()
-                    .Spline(AccumulatorExtensions.GenerateNormalizedGauss(GaussSize, _gaussFactor))
+                    .ParallelSpline(AccumulatorExtensions.GenerateNormalizedGauss(GaussSize, _gaussFactor))
                     .ConvertToBitmap();
 
                 Application.Current.Dispatcher.Invoke(() => AccumulatorImage = bitmap);

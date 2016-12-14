@@ -117,7 +117,7 @@ namespace Hough
             return wbitmap;
         }
 
-        public static unsafe WriteableBitmap DrawPixelsOnSource(BitmapSource srcImage, List<Point> markers)
+        public static unsafe WriteableBitmap DrawPixelsOnSource(BitmapSource srcImage, IEnumerable<Tuple<Point,Point>> markers)
         {
             // get a writable bitmap of that image
             WriteableBitmap wbitmap = new WriteableBitmap(srcImage);
@@ -136,8 +136,12 @@ namespace Hough
 
             foreach (var p in markers)
             {
-                byte* bPixel = pImgData + stride * p.Y + p.X * bytesPerPixel;
+                byte* bPixel = pImgData + stride * p.Item1.Y + p.Item1.X * bytesPerPixel;
                 UInt32* iPixel = (UInt32*)bPixel;
+                *iPixel = 0xffff0000; //red
+
+                bPixel = pImgData + stride * p.Item2.Y + p.Item2.X * bytesPerPixel;
+                iPixel = (UInt32*)bPixel;
                 *iPixel = 0xffff0000; //red
             }
 
