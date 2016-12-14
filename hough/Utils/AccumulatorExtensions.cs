@@ -32,7 +32,7 @@ namespace Hough.Utils
                             c += accumulator[y + dy , + x + dx] * splineFunction[dy + l, dx + l];
                         }
                     }
-                    splinedAccumulator[y , + x] = (int)c;
+                    splinedAccumulator[y, x] = (int)c;
                 }
             }
 

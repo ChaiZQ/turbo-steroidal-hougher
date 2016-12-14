@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -18,17 +19,25 @@ namespace Hough.Presentation.ViewModel
 {
     class MainWindowVM : ViewModel
     {
-        private IShellService _shellService;
+        private readonly IShellService _shellService;
+        private readonly RelayCommand _openFileCommand;
 
         private string _imagePath;
-        private RelayCommand _openFileCommand;
-        private Bitmap _bitmap;
+
         private Bitmap _accumulatorImage;
+
         private Accumulator _accumulator;
+
+        private BitmapSource _openedSource;
+        private WriteableBitmap _wb;
 
         private int _rhoDivisor = 180;
         private int _thetaDivisor = 100;
 
+        private bool _gaussBlurEnabled;
+
+        private double _gaussFactor = 0.8408964d;
+        private int _gaussSize = 1;
 
         public MainWindowVM(IShellService shellService)
         {
@@ -40,8 +49,10 @@ namespace Hough.Presentation.ViewModel
                 if (string.IsNullOrEmpty(ImagePath))
                     return;
 
-                Source = new Bitmap(ImagePath);
-                BlackPixels = ImageProcessor.GetBlackPixels(Source);
+                _openedSource = ImageProcessor.OpenFile(ImagePath);
+                Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, new List<Point>());
+
+                BlackPixels = ImageProcessor.GetBlackPixels(ImageProcessor.BitmapFromWriteableBitmap(Wb));
                 GetLines();
             });
 
@@ -65,79 +76,42 @@ namespace Hough.Presentation.ViewModel
                 Rho = line.Rho + _accumulator.RhoDelta / 2,
                 Theta = line.Theta + _accumulator.ThetaDelta / 2,
             };
+
             Debug.WriteLine("Minimum: " + minLine);
             Debug.WriteLine("maximum: " + maxLine);
 
-            Bitmap clone = (Bitmap)Image.FromFile(ImagePath);
-
-            using (var graphics = Graphics.FromImage(clone))
-            {
-                var tempLine1 = new PolarPointF()
-                {
-                    Rho = line.Rho,
-                    Theta = minLine.Theta
-                };
-                var tempLine2 = new PolarPointF()
-                {
-                    Rho = line.Rho,
-                    Theta = maxLine.Theta
-                };
-                DrawPolarLine(tempLine1, graphics, new Pen(Color.Chartreuse, 1));
-                DrawPolarLine(tempLine2, graphics, new Pen(Color.Green, 1));
-
-                DrawPolarLine(line, graphics, new Pen(Color.Red, 2));
-            }
-
-
-            Source = clone;
+            Wb = ImageProcessor.DrawPolarLine(_openedSource, line);
         }
 
         private void MoveClickHandler(System.Drawing.Point point)
         {
-            Bitmap clone = (Bitmap)Image.FromFile(ImagePath);
+
+            var points = BlackPixels.GetCombinationPairs()
+                .Select(t => new
+                {
+                    Points = t,
+                    line = PointUtils.GetPolarLineFromCartesianPoints(t),
+                })
+                .Where(p =>
+                {
+                    var index = _accumulator.GetAccumulatorIndex(p.line);
+                    return index[0] == point.X && index[1] == point.Y;
+                });
+
+            var points1 = points
+                .Select(p => p.Points.Item1)
+                .ToList();
+            var points2 = points
+                .Select(p => p.Points.Item2)
+                .ToList();
+
+            points1.AddRange(points2);
 
 
-
-            using (var graphics = Graphics.FromImage(clone))
-            {
-                BlackPixels.GetCombinationPairs()
-                    .Select(t => new
-                    {
-                        Points = t,
-                        line = PointUtils.GetPolarLineFromCartesianPoints(t),
-                    })
-                    .Where(p =>
-                    {
-                        var index = _accumulator.GetAccumulatorIndex(p.line);
-                        return index[0] == point.X && index[1] == point.Y;
-                    })
-                    .Select(p => p.Points)
-                    .ToList()
-                    .ForEach(points =>
-                    {
-                        graphics.DrawLine(new Pen(Color.Magenta), points.Item1, points.Item2);
-                        //                        clone.SetPixel(points.Item1.X, points.Item1.Y, Color.Magenta);
-                        //                        clone.SetPixel(points.Item2.X, points.Item2.Y, Color.Magenta);
-                    });
-            }
-
-
-            Source = clone;
+            Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, points1);
         }
 
-        private static void DrawPolarLine(PolarPointF line, Graphics graphics, Pen pen)
-        {
-            var a = Math.Cos(line.Rho);
-            var b = Math.Sin(line.Rho);
-            var x0 = a * (line.Theta);
-            var y0 = b * (line.Theta);
-            int x1 = (int)(x0 + 1000 * (-b));
-            int y1 = (int)(y0 + 1000 * (a));
-            int x2 = (int)(x0 - 1000 * (-b));
-            int y2 = (int)(y0 - 1000 * (a));
-
-            graphics.DrawLine(pen, x1, y1, x2, y2);
-        }
+        
 
 
         public string ImagePath
@@ -150,19 +124,17 @@ namespace Hough.Presentation.ViewModel
             }
         }
 
-
-
-        public Bitmap Source
+        
+        public WriteableBitmap Wb
         {
-            get { return _bitmap; }
+            get { return _wb; }
             set
             {
-                _bitmap = value;
-                RaisePropertyChangedEvent("Source");
+                _wb = value;
+                RaisePropertyChangedEvent("Wb");
             }
         }
 
-        //public Lin
         public int ThetaDivisor
         {
             get { return _thetaDivisor; }
@@ -212,35 +184,35 @@ namespace Hough.Presentation.ViewModel
             }
         }
 
-        private double gaussFactor = 0.8408964d;
+        
         public double GaussFactor
         {
-            get { return gaussFactor; }
+            get { return _gaussFactor; }
             set
             {
-                gaussFactor = value;
+                _gaussFactor = value;
                 RaisePropertyChangedEvent("GaussFactor");
             }
         }
 
-        private int gaussSize = 1;
+        
         public int GaussSize
         {
-            get { return gaussSize; }
+            get { return _gaussSize; }
             set
             {
-                gaussSize = value;
+                _gaussSize = value;
                 RaisePropertyChangedEvent("GaussSize");
             }
         }
 
-        private bool gaussBlurEnabled;
+        
         public bool GaussBlurEnabled
         {
-            get { return gaussBlurEnabled; }
+            get { return _gaussBlurEnabled; }
             set
             {
-                gaussBlurEnabled = value;
+                _gaussBlurEnabled = value;
                 RaisePropertyChangedEvent("GaussBlurEnabled");
 
             }
@@ -260,7 +232,7 @@ namespace Hough.Presentation.ViewModel
             {
                 return new RelayCommand(o =>
                 {
-                    var vm = new SettingsDialogVM(_rhoDivisor, _thetaDivisor, gaussFactor, gaussSize, gaussBlurEnabled);
+                    var vm = new SettingsDialogVM(_rhoDivisor, _thetaDivisor, _gaussFactor, _gaussSize, _gaussBlurEnabled);
 
                     var result = _shellService.ShowDialog("Hough transform output settings", vm);
                     if (result != true) return;
@@ -271,7 +243,7 @@ namespace Hough.Presentation.ViewModel
                     this.GaussFactor = vm.GaussFactor;
                     this.GaussSize = vm.GaussSize;
 
-                    if (Source != null)
+                    if (_openedSource != null)
                         GetLines();
                 });
             }
@@ -282,7 +254,7 @@ namespace Hough.Presentation.ViewModel
 
         private async void GetLines()
         {
-            _accumulator = new Accumulator(Source.Width, Source.Height, RhoDivisor, ThetaDivisor);
+            _accumulator = new Accumulator(Wb.PixelWidth, Wb.PixelHeight, RhoDivisor, ThetaDivisor);
 
             await Task.Run(delegate
             {
@@ -296,7 +268,7 @@ namespace Hough.Presentation.ViewModel
 
                 var bitmap = _accumulator
                     .GetAccumulatorTable()
-                    .Spline(AccumulatorExtensions.GenerateNormalizedGauss(GaussSize, gaussFactor))
+                    .Spline(AccumulatorExtensions.GenerateNormalizedGauss(GaussSize, _gaussFactor))
                     .ConvertToBitmap();
 
                 Application.Current.Dispatcher.Invoke(() => AccumulatorImage = bitmap);

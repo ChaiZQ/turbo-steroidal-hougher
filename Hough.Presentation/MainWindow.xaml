@@ -58,7 +58,7 @@
                 </Grid.ColumnDefinitions>
                 <Border BorderThickness="0" Background="AliceBlue" Grid.Column="0"  BorderBrush="MidnightBlue">
                     <xctk:Zoombox>
-                        <Image Source="{Binding Source,Converter={StaticResource binary-image-converter}}"
+                        <Image Source="{Binding Wb}"
                        RenderOptions.BitmapScalingMode="NearestNeighbor"
                        RenderOptions.EdgeMode="Unspecified"
                        HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
