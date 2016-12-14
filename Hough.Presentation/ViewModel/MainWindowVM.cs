@@ -62,6 +62,10 @@ namespace Hough.Presentation.ViewModel
 
         private void MoveOverAccumulatorHandler(System.Drawing.Point point)
         {
+            Stopwatch watch = new Stopwatch();
+
+            watch.Start();
+
             Debug.WriteLine("{{X=" + point.X + ", Y=" + point.Y + ", Value=" + _accumulator[point.X, point.Y] + "}}");
             var line = _accumulator.GetLineFromIndex(new List<int>() { point.X, point.Y });
 
@@ -81,11 +85,17 @@ namespace Hough.Presentation.ViewModel
             Debug.WriteLine("maximum: " + maxLine);
 
             Wb = ImageProcessor.DrawPolarLine(_openedSource, line);
+
+            watch.Stop();
+            Console.WriteLine("move: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
         }
 
         private void MoveClickHandler(System.Drawing.Point point)
         {
 
+            Stopwatch watch = new Stopwatch();
+
+            watch.Start();
             var points = BlackPixels.GetCombinationPairs()
                 .Select(t => new
                 {
@@ -109,6 +119,8 @@ namespace Hough.Presentation.ViewModel
 
 
             Wb = ImageProcessor.DrawPixelsOnSource(_openedSource, points1);
+            watch.Stop();
+            Console.WriteLine("click: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
         }
 
         
@@ -258,6 +270,10 @@ namespace Hough.Presentation.ViewModel
 
             await Task.Run(delegate
             {
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+
+                
 
                 BlackPixels.GetCombinationPairs()
                     .Select(PointUtils.GetPolarLineFromCartesianPoints)
@@ -273,6 +289,8 @@ namespace Hough.Presentation.ViewModel
 
                 Application.Current.Dispatcher.Invoke(() => AccumulatorImage = bitmap);
 
+                watch.Stop();
+                Console.WriteLine("analysing: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
                 Debug.WriteLine(line);
             });
         }
