@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Hough.Utils
@@ -20,25 +21,29 @@ namespace Hough.Utils
             {
                 throw new Exception("");
             }
-            var splinedAccumulator = new int[accumulator.GetLength(0), accumulator.GetLength(1)];
-
 
             int height = accumulator.GetLength(0);
             int width = accumulator.GetLength(1);
+
+            var splinedAccumulator = new int[height, width];
+
             var l = splineFunction.GetLength(0) / 2; // half spline length
-            
+
             for (int taskNumber = 0; taskNumber < degreeOfParallelism; taskNumber++)
             {
                 // capturing taskNumber in lambda wouldn't work correctly
                 int taskNumberCopy = taskNumber;
 
-                tasks[taskNumber] = Task.Factory.StartNew(
+                tasks[taskNumberCopy] = Task.Factory.StartNew(
                     () =>
                     {
-                        var max = (height - l) * (taskNumberCopy + 1) / degreeOfParallelism;
-                        for (int y = (height - l) * taskNumberCopy / degreeOfParallelism;
-                            y < max;
-                            y++)
+                        var max = (height - 2*l) * (taskNumberCopy + 1) / degreeOfParallelism + l;
+
+                       // Debug.WriteLine("for: " + ((height - 2*l) * taskNumberCopy / degreeOfParallelism + l) + " < " + max);
+
+                        for (int y = (height - 2*l) * taskNumberCopy / degreeOfParallelism + l;
+                                y < max;
+                                y++)
                         {
                             for (var x = l; x < width - l; x++)
                             {
@@ -50,6 +55,7 @@ namespace Hough.Utils
                                         c += accumulator[y + dy, x + dx] * splineFunction[dy + l, dx + l];
                                     }
                                 }
+
                                 splinedAccumulator[y, x] = (int)c;
                             }
                         }
@@ -62,11 +68,11 @@ namespace Hough.Utils
         }
         public static int[,] Spline(this int[,] accumulator, double[,] splineFunction)
         {
-            if (splineFunction.GetLength(0)!= splineFunction.GetLength(1))
+            if (splineFunction.GetLength(0) != splineFunction.GetLength(1))
             {
                 throw new Exception("Funkcja splatana powinna być kwadratowa");
             }
-            if (splineFunction.GetLength(0)%2!=1)
+            if (splineFunction.GetLength(0) % 2 != 1)
             {
                 throw new Exception("");
             }
@@ -75,7 +81,8 @@ namespace Hough.Utils
 
             int height = accumulator.GetLength(0);
             int width = accumulator.GetLength(1);
-            var l = splineFunction.GetLength(0)/2; // half spline length
+            var l = splineFunction.GetLength(0) / 2; // half spline length
+
             for (var y = l; y < height - l; y++)
             {
                 for (var x = l; x < width - l; x++)
@@ -85,7 +92,7 @@ namespace Hough.Utils
                     {
                         for (var dx = -l; dx <= l; dx++)
                         {
-                            c += accumulator[y + dy , + x + dx] * splineFunction[dy + l, dx + l];
+                            c += accumulator[y + dy, +x + dx] * splineFunction[dy + l, dx + l];
                         }
                     }
                     splinedAccumulator[y, x] = (int)c;
