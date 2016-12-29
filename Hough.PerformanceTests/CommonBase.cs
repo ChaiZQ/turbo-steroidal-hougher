@@ -10,7 +10,7 @@ namespace Hough.PerformanceTests
 {
     public class CommonBase
     {
-        const string imagePath = "wieksze.png";
+        const string imagePath = "asd.bmp";
 
         protected Bitmap Bitmap;
         protected Accumulator Accumulator;

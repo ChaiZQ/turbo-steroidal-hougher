@@ -57,6 +57,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="asd.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="czarne.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

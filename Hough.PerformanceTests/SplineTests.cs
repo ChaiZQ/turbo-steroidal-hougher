@@ -11,7 +11,7 @@ namespace Hough.PerformanceTests
 {
     public class SplineTests : CommonBase
     {
-        int gaussSize = 71;
+        int gaussSize = 7;
 
         private void Setup()
         {

@@ -117,6 +117,22 @@ namespace Hough
             return (int[,])_accumulator.Clone();
         }
 
-        public int this[int rho, int theta] { get { return _accumulator[rho, theta]; } }
+        public int this[int rho, int theta]
+        {
+            get
+            {
+
+                int a = 0;
+                try
+                {
+                    a = _accumulator[rho, theta];
+                }
+                catch
+                {
+                }
+
+                return a;
+            }
+        }
     }
 }
