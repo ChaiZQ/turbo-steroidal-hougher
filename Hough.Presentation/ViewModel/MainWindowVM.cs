@@ -73,29 +73,30 @@ namespace Hough.Presentation.ViewModel
             Debug.WriteLine("Minimum: " + minLine);
             Debug.WriteLine("maximum: " + maxLine);
 
-            Bitmap clone = (Bitmap)Image.FromFile(ImagePath);
-
-            using (var graphics = Graphics.FromImage(clone))
+            using (Bitmap clone = (Bitmap) Image.FromFile(ImagePath))
             {
-                var tempLine1 = new PolarPointF()
-                {
-                    Rho = line.Rho,
-                    Theta = minLine.Theta
-                };
-                var tempLine2 = new PolarPointF()
-                {
-                    Rho = line.Rho,
-                    Theta = maxLine.Theta
-                };
-                DrawPolarLine(tempLine1, graphics, new Pen(Color.Chartreuse, 1));
-                DrawPolarLine(tempLine2, graphics, new Pen(Color.Green, 1));
 
-                DrawPolarLine(line, graphics, new Pen(Color.Red, 2));
+                using (var graphics = Graphics.FromImage(clone))
+                {
+                    var tempLine1 = new PolarPointF()
+                    {
+                        Rho = line.Rho,
+                        Theta = minLine.Theta
+                    };
+                    var tempLine2 = new PolarPointF()
+                    {
+                        Rho = line.Rho,
+                        Theta = maxLine.Theta
+                    };
+                    DrawPolarLine(tempLine1, graphics, new Pen(Color.Chartreuse, 1));
+                    DrawPolarLine(tempLine2, graphics, new Pen(Color.Green, 1));
+
+                    DrawPolarLine(line, graphics, new Pen(Color.Red, 2));
+                }
+
+
+                Source = clone;
             }
-
-
-            Source = clone;
-
             watch.Stop();
             Console.WriteLine("move: Measured time: " + watch.Elapsed.TotalMilliseconds + " ms.");
         }
