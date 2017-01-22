@@ -107,32 +107,22 @@ namespace Hough.Presentation.ViewModel
 
             watch.Start();
 
-            Bitmap clone = (Bitmap)Image.FromFile(ImagePath);
+            Bitmap clone = (Bitmap) Image.FromFile(ImagePath);
 
-
-
-            using (var graphics = Graphics.FromImage(clone))
-            {
-                BlackPixels.GetCombinationPairs()
-                    .Select(t => new
-                    {
-                        Points = t,
-                        line = PointUtils.GetPolarLineFromCartesianPoints(t),
-                    })
-                    .Where(p =>
-                    {
-                        var index = _accumulator.GetAccumulatorIndex(p.line);
-                        return index[0] == point.X && index[1] == point.Y;
-                    })
-                    .Select(p => p.Points)
-                    .ToList()
-                    .ForEach(points =>
-                    {
-                        graphics.DrawLine(new Pen(Color.Magenta), points.Item1, points.Item2);
-                        //                        clone.SetPixel(points.Item1.X, points.Item1.Y, Color.Magenta);
-                        //                        clone.SetPixel(points.Item2.X, points.Item2.Y, Color.Magenta);
-                    });
-            }
+            BlackPixels.GetCombinationPairs()
+                .Select(t => new
+                {
+                    Points = t,
+                    line = PointUtils.GetPolarLineFromCartesianPoints(t),
+                })
+                .Where(p =>
+                {
+                    var index = _accumulator.GetAccumulatorIndex(p.line);
+                    return index[0] == point.X && index[1] == point.Y;
+                })
+                .SelectMany(p => new[] {p.Points.Item1, p.Points.Item2})
+                .ToList()
+                .ForEach(p => clone.SetPixel(p.X, p.Y, Color.Magenta));
 
 
             Source = clone;
